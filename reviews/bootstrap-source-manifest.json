@@ -1,0 +1,35 @@
+{
+  "recorded_at": "2026-11-06T07:01:15.143355+00:00",
+  "scope": "bootstrap source identities, not a formal verification run; no fixed commit SHA or execution timestamp attestation",
+  "repositories": {
+    "app": {
+      "sha": null,
+      "state": "uncommitted-bootstrap",
+      "files": {
+        "ios/GODIEOR/ContentView.swift": "9b474f87c05602f6a1ce2fc70ba2fe8fffd055f12bd2cf7198cd594db4028040",
+        "ios/GODIEOR/GODIEORApp.swift": "eefb357d4cf16e6241787ba7ab73acc5e4e3f740566de3afe550126bee257f53",
+        "ios/GODIEOR.xcodeproj/project.pbxproj": "8c2bf7414c5341a0848c9363f89fda9a0b30eed80d540f2a58867a5a3c45a035",
+        "ios/GODIEOR.xcodeproj/xcshareddata/xcschemes/GODIEOR.xcscheme": "4564c527014b913c9f66d99a68ee5250a07c444ca9d9ab86fd68bab2fb821108",
+        "scripts/build-ios.sh": "f76dfe653e53cd6351037ad46cd30ee752d532e2ed1253d9250c7b1f6a746e41"
+      },
+      "aggregate_sha256": "d90b1c5c0020a3b747c579196bee68eabadc4a8ddcbb58119a2161bddfa3c1ba"
+    },
+    "verifier": {
+      "sha": null,
+      "state": "uncommitted-bootstrap",
+      "files": {
+        "src/godieor_verifier/__init__.py": "9bae4ceba8bd3338169fdfd260b8ce4719c27da04b0d85d801dd1886913f772c",
+        "src/godieor_verifier/__main__.py": "fea12bc399102c047f4406766b8fda59ae400a1b9cc52e8942d9c65eec49677d",
+        "src/godieor_verifier/engine.py": "3c86f94cd82bdbe636de66996bff8e07e80c9e8b6497e7df7e683e23607c2a40",
+        "tests/test_engine.py": "f9d5638f152aefb3072a81c677a783924a6d04d0f17895f1c29e85626212bb9f",
+        "requirements/README.md": "230afb806321c64ed9313005ed6be04e39deffb47a94a7fe9da98c943f0f73b6",
+        "requirements/acceptance.yaml": "c4906283810c8b378800b67930028685a41b6a051923ea9f9415346b2d657063",
+        "schemas/review.schema.json": "d7684c4fa3f79d44735985ab31b1ea44821285c80f24e2e6434de42eeb696c0f",
+        "scripts/self-test.sh": "305ed2928dd2211d483a28af03e69cc7932cc7a34583bc028339351c34a7b569",
+        "scripts/verifier": "bddf0cef69da32d3ef308035cef3718800913bc69107066d6ebf5cc78abd1234"
+      },
+      "aggregate_sha256": "7a7e3e13cca99082b517836a4cf297d5c62f127e72d501329f72262d5994a467"
+    }
+  },
+  "notes": "Source digests recorded after trailing blank-line cleanup; independent review preceded this whitespace-only cleanup."
+}

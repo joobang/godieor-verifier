@@ -1,0 +1,45 @@
+{
+  "repository": "joobang/wd-harness",
+  "ref": "main",
+  "access": "read-only via connected GitHub",
+  "reviewed_at": "2026-11-06",
+  "scope": "Selected files only; not a full repository audit. Blob SHAs identify the fetched contents; no common commit SHA was established.",
+  "files": [
+    {
+      "path": "README.md",
+      "blob_sha": "29c9299b1f970739a68bfec7c60e250a6858dec6"
+    },
+    {
+      "path": "plugins/welda-engineer/workflow.json",
+      "blob_sha": "739fcbbae59a304b6a3a477ac976c8a2aab76c83"
+    },
+    {
+      "path": "plugins/welda-engineer/agents/reviewer.md",
+      "blob_sha": "a3516e4eb04949488f83e5be10dd09641ece3cbb"
+    },
+    {
+      "path": "plugins/welda-engineer/agents/tester.md",
+      "blob_sha": "f1cc4ae8870a18562270458a5984f36f371d699b"
+    },
+    {
+      "path": "DEVELOPMENT.md",
+      "blob_sha": "2c038ccd7120bd7584571ca5a565d508b675aa3b"
+    },
+    {
+      "path": "TEST.md",
+      "blob_sha": "5ae67642da0885a3baead7267a88d2c938e055a7"
+    },
+    {
+      "path": "plugins/welda-engineer/prompts/phase-curiosity.md",
+      "blob_sha": "0197ed8054bc6f6f1ec517f6357ce6bedcc6b57d"
+    },
+    {
+      "path": "plugins/welda-engineer/prompts/phase-test.md",
+      "blob_sha": "941d3e5d2045d2bd6a4e317b5097d7555d4d4099"
+    },
+    {
+      "path": "plugins/welda-engineer/prompts/phase-review.md",
+      "blob_sha": "1dbde28252b52c8b1a725932f37dc49646719664"
+    }
+  ]
+}

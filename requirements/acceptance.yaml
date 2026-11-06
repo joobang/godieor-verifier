@@ -1,0 +1,105 @@
+{
+  "version": "0.1.0-draft",
+  "status": "draft",
+  "approved_by": null,
+  "approved_at": null,
+  "approval_record": null,
+  "required_checks": [
+    "ios-build",
+    "event-identity",
+    "time-semantics",
+    "filter-intersection",
+    "settings-roundtrip",
+    "provider-contract",
+    "ios-user-flow",
+    "secret-check"
+  ],
+  "requirements": [
+    {
+      "id": "GD-001",
+      "development_requirement": "PROD-001",
+      "checks": [
+        "ios-user-flow"
+      ],
+      "expectation": "같은 고정 데이터에서 월간 캘린더와 날짜순 카드 뷰가 동일한 날짜 이벤트 집합을 표시한다. 미정 날짜는 어느 날짜에도 배치하지 않는다."
+    },
+    {
+      "id": "GD-002",
+      "development_requirement": "PROD-002",
+      "checks": [
+        "filter-intersection",
+        "ios-user-flow"
+      ],
+      "expectation": "한 차원 안은 OR, 카테고리·리그·플랫폼 차원 사이는 AND로 결합한다. 카테고리 복수 선택과 EPL·플랫폼 교집합의 포함/제외 이벤트를 독립 fixture로 확인한다. 빈 선택의 의미는 승인 전 확정한다."
+    },
+    {
+      "id": "GD-003",
+      "development_requirement": "PROD-003",
+      "checks": [
+        "settings-roundtrip",
+        "ios-user-flow"
+      ],
+      "expectation": "필터와 보기 모드를 바꿔 저장한 뒤 앱 프로세스를 종료·재실행하고 다시 조회해 같은 값인지 확인한다."
+    },
+    {
+      "id": "GD-004",
+      "development_requirement": "PROD-004",
+      "checks": [
+        "provider-contract",
+        "ios-user-flow"
+      ],
+      "expectation": "상세에 원본 정밀도에 맞는 날짜/시각·지역·플랫폼·출처를 표시한다. 포스터 누락은 허용하며 근거 없는 값은 생성하지 않는다."
+    },
+    {
+      "id": "GD-005",
+      "development_requirement": "PROD-005",
+      "checks": [
+        "event-identity"
+      ],
+      "expectation": "같은 콘텐츠라도 한국 극장/OTT, 지역, 회차, 실제 공개 시각이 다른 이벤트는 분리한다. 콘텐츠 제목만으로 병합하지 않는다."
+    },
+    {
+      "id": "GD-006",
+      "development_requirement": "PROD-006",
+      "checks": [
+        "event-identity"
+      ],
+      "expectation": "동일 출처 이벤트를 재수집해도 중복되지 않는다. 동일 공개 이벤트임이 확인된 복수 플랫폼만 병합하고 다른 일정은 보존한다."
+    },
+    {
+      "id": "GD-007",
+      "development_requirement": "PROD-007",
+      "checks": [
+        "time-semantics",
+        "ios-user-flow"
+      ],
+      "expectation": "가상의 2026-11-06T20:00:00Z는 KST 2026-11-07 05:00이다. date-only 2026-11-06은 표시 시간대 변경으로 날짜를 이동하지 않는다. 월/분기/연도/TBD에서 임의 날짜나 시각을 만들지 않는다. London DST 경계와 날짜 rollover를 별도 검증한다."
+    },
+    {
+      "id": "GD-008",
+      "development_requirement": "PROD-008",
+      "checks": [
+        "event-identity",
+        "provider-contract"
+      ],
+      "expectation": "동일 출처 ID의 일정 변경을 갱신해 이전/새 이벤트가 동시에 중복 표시되지 않는다. 연기·취소와 수집 시각을 보존한다. 최신성 허용치는 제공처 확인 후 승인한다."
+    },
+    {
+      "id": "GD-009",
+      "development_requirement": "PROD-009",
+      "checks": [
+        "provider-contract"
+      ],
+      "expectation": "영화·OTT 드라마·게임·EPL별 실제 응답 계약을 검증한다. fixture 기반 검사는 실제 API 연결 확인을 대체하지 않는다. 국가별 시청 가능 플랫폼을 한국 OTT 공개일 근거로 사용하지 않는다. 지원 OTT 범위는 승인 전 확정한다."
+    },
+    {
+      "id": "GD-010",
+      "development_requirement": "PROD-010",
+      "checks": [
+        "ios-build",
+        "secret-check"
+      ],
+      "expectation": "iOS Simulator 대상 빌드가 성공한다. 앱 번들/소스/fixture/로그에 운영 키와 개인정보가 없다. 외부 API 키는 서버에 둔다."
+    }
+  ]
+}

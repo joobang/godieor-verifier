@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "findings": [
+    {
+      "id": "BOOT-001",
+      "scope": "verifier-bootstrap",
+      "requirement_id": null,
+      "status": "resolved",
+      "severity": "high",
+      "first_run_id": "BOOTSTRAP-20261106",
+      "app_head_sha": null,
+      "verifier_sha": null,
+      "verifier_source_sha256": "7a7e3e13cca99082b517836a4cf297d5c62f127e72d501329f72262d5994a467",
+      "evidence": "reviews/bootstrap-2026-11-06.md",
+      "reproduction": "test_new_review_cannot_reuse_old_check_results",
+      "title": "Individual check SHA/run/acceptance binding missing",
+      "history": [
+        {
+          "action": "found",
+          "context": "independent-review, no implementation history"
+        },
+        {
+          "action": "fixed",
+          "context": "implementation agent change"
+        },
+        {
+          "action": "rechecked",
+          "result": "original reproduction resolved; independent reviewer; 33 tests OK",
+          "evidence": "reviews/bootstrap-2026-11-06.md"
+        }
+      ]
+    },
+    {
+      "id": "BOOT-002",
+      "scope": "verifier-bootstrap",
+      "requirement_id": null,
+      "status": "resolved",
+      "severity": "medium",
+      "first_run_id": "BOOTSTRAP-20261106",
+      "app_head_sha": null,
+      "verifier_sha": null,
+      "verifier_source_sha256": "7a7e3e13cca99082b517836a4cf297d5c62f127e72d501329f72262d5994a467",
+      "evidence": "reviews/bootstrap-2026-11-06.md",
+      "reproduction": "test_review_schema_rejects_extra_fields_and_array_settings",
+      "title": "Review schema and engine validation mismatch",
+      "history": [
+        {
+          "action": "found",
+          "context": "independent-review, no implementation history"
+        },
+        {
+          "action": "fixed",
+          "context": "implementation agent change"
+        },
+        {
+          "action": "rechecked",
+          "result": "original reproduction resolved; independent reviewer; 33 tests OK",
+          "evidence": "reviews/bootstrap-2026-11-06.md"
+        }
+      ]
+    },
+    {
+      "id": "BOOT-003",
+      "scope": "verifier-bootstrap",
+      "requirement_id": null,
+      "status": "resolved",
+      "severity": "medium",
+      "first_run_id": "BOOTSTRAP-20261106",
+      "app_head_sha": null,
+      "verifier_sha": null,
+      "verifier_source_sha256": "7a7e3e13cca99082b517836a4cf297d5c62f127e72d501329f72262d5994a467",
+      "evidence": "reviews/bootstrap-2026-11-06.md",
+      "reproduction": "test_invalid_json_unicode_and_depth_produce_cli_error_report",
+      "title": "Malformed JSON/Unicode caused CLI crash",
+      "history": [
+        {
+          "action": "found",
+          "context": "independent-review, no implementation history"
+        },
+        {
+          "action": "fixed",
+          "context": "implementation agent change"
+        },
+        {
+          "action": "rechecked",
+          "result": "original reproduction resolved; independent reviewer; 33 tests OK",
+          "evidence": "reviews/bootstrap-2026-11-06.md"
+        }
+      ]
+    },
+    {
+      "id": "BOOT-004",
+      "scope": "verifier-bootstrap",
+      "requirement_id": null,
+      "status": "resolved",
+      "severity": "medium",
+      "first_run_id": "BOOTSTRAP-20261106",
+      "app_head_sha": null,
+      "verifier_sha": null,
+      "verifier_source_sha256": "7a7e3e13cca99082b517836a4cf297d5c62f127e72d501329f72262d5994a467",
+      "evidence": "reviews/bootstrap-2026-11-06.md",
+      "reproduction": "test_malformed_check_does_not_hide_later_failure",
+      "title": "Malformed earlier check hid later failure",
+      "history": [
+        {
+          "action": "found",
+          "context": "independent-review, no implementation history"
+        },
+        {
+          "action": "fixed",
+          "context": "implementation agent change"
+        },
+        {
+          "action": "rechecked",
+          "result": "original reproduction resolved; independent reviewer; 33 tests OK",
+          "evidence": "reviews/bootstrap-2026-11-06.md"
+        }
+      ]
+    }
+  ]
+}

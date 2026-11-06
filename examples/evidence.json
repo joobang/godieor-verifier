@@ -1,0 +1,160 @@
+{
+  "schema_version": 1,
+  "run_id": "SYNTHETIC-EXAMPLE-NOT-A-PRODUCT-RUN",
+  "started_at": "2026-11-06T06:00:00+00:00",
+  "finished_at": "2026-11-06T06:00:00+00:00",
+  "app": {
+    "base_sha": "1111111111111111111111111111111111111111",
+    "head_sha": "2222222222222222222222222222222222222222"
+  },
+  "verifier": {
+    "sha": null,
+    "dirty": true,
+    "state_sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+  },
+  "acceptance": {
+    "version": "0.1.0-draft",
+    "sha256": "c4906283810c8b378800b67930028685a41b6a051923ea9f9415346b2d657063"
+  },
+  "execution": {
+    "mode": "fixture",
+    "isolation_verified": false,
+    "tool_versions": {
+      "runner": "synthetic-example-only"
+    }
+  },
+  "checks": [
+    {
+      "id": "ios-build",
+      "status": "PASS",
+      "command": [
+        "synthetic-not-executed",
+        "ios-build"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-06T06:00:00+00:00",
+      "finished_at": "2026-11-06T06:00:00+00:00",
+      "evidence": "synthetic://not-a-real-log/ios-build",
+      "run_id": "SYNTHETIC-EXAMPLE-NOT-A-PRODUCT-RUN",
+      "app_head_sha": "2222222222222222222222222222222222222222",
+      "acceptance_sha256": "c4906283810c8b378800b67930028685a41b6a051923ea9f9415346b2d657063"
+    },
+    {
+      "id": "event-identity",
+      "status": "PASS",
+      "command": [
+        "synthetic-not-executed",
+        "event-identity"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-06T06:00:00+00:00",
+      "finished_at": "2026-11-06T06:00:00+00:00",
+      "evidence": "synthetic://not-a-real-log/event-identity",
+      "run_id": "SYNTHETIC-EXAMPLE-NOT-A-PRODUCT-RUN",
+      "app_head_sha": "2222222222222222222222222222222222222222",
+      "acceptance_sha256": "c4906283810c8b378800b67930028685a41b6a051923ea9f9415346b2d657063"
+    },
+    {
+      "id": "time-semantics",
+      "status": "PASS",
+      "command": [
+        "synthetic-not-executed",
+        "time-semantics"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-06T06:00:00+00:00",
+      "finished_at": "2026-11-06T06:00:00+00:00",
+      "evidence": "synthetic://not-a-real-log/time-semantics",
+      "run_id": "SYNTHETIC-EXAMPLE-NOT-A-PRODUCT-RUN",
+      "app_head_sha": "2222222222222222222222222222222222222222",
+      "acceptance_sha256": "c4906283810c8b378800b67930028685a41b6a051923ea9f9415346b2d657063"
+    },
+    {
+      "id": "filter-intersection",
+      "status": "PASS",
+      "command": [
+        "synthetic-not-executed",
+        "filter-intersection"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-06T06:00:00+00:00",
+      "finished_at": "2026-11-06T06:00:00+00:00",
+      "evidence": "synthetic://not-a-real-log/filter-intersection",
+      "run_id": "SYNTHETIC-EXAMPLE-NOT-A-PRODUCT-RUN",
+      "app_head_sha": "2222222222222222222222222222222222222222",
+      "acceptance_sha256": "c4906283810c8b378800b67930028685a41b6a051923ea9f9415346b2d657063"
+    },
+    {
+      "id": "settings-roundtrip",
+      "status": "PASS",
+      "command": [
+        "synthetic-not-executed",
+        "settings-roundtrip"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-06T06:00:00+00:00",
+      "finished_at": "2026-11-06T06:00:00+00:00",
+      "evidence": "synthetic://not-a-real-log/settings-roundtrip",
+      "run_id": "SYNTHETIC-EXAMPLE-NOT-A-PRODUCT-RUN",
+      "app_head_sha": "2222222222222222222222222222222222222222",
+      "acceptance_sha256": "c4906283810c8b378800b67930028685a41b6a051923ea9f9415346b2d657063"
+    },
+    {
+      "id": "provider-contract",
+      "status": "PASS",
+      "command": [
+        "synthetic-not-executed",
+        "provider-contract"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-06T06:00:00+00:00",
+      "finished_at": "2026-11-06T06:00:00+00:00",
+      "evidence": "synthetic://not-a-real-log/provider-contract",
+      "run_id": "SYNTHETIC-EXAMPLE-NOT-A-PRODUCT-RUN",
+      "app_head_sha": "2222222222222222222222222222222222222222",
+      "acceptance_sha256": "c4906283810c8b378800b67930028685a41b6a051923ea9f9415346b2d657063"
+    },
+    {
+      "id": "ios-user-flow",
+      "status": "PASS",
+      "command": [
+        "synthetic-not-executed",
+        "ios-user-flow"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-06T06:00:00+00:00",
+      "finished_at": "2026-11-06T06:00:00+00:00",
+      "evidence": "synthetic://not-a-real-log/ios-user-flow",
+      "run_id": "SYNTHETIC-EXAMPLE-NOT-A-PRODUCT-RUN",
+      "app_head_sha": "2222222222222222222222222222222222222222",
+      "acceptance_sha256": "c4906283810c8b378800b67930028685a41b6a051923ea9f9415346b2d657063"
+    },
+    {
+      "id": "secret-check",
+      "status": "PASS",
+      "command": [
+        "synthetic-not-executed",
+        "secret-check"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-11-06T06:00:00+00:00",
+      "finished_at": "2026-11-06T06:00:00+00:00",
+      "evidence": "synthetic://not-a-real-log/secret-check",
+      "run_id": "SYNTHETIC-EXAMPLE-NOT-A-PRODUCT-RUN",
+      "app_head_sha": "2222222222222222222222222222222222222222",
+      "acceptance_sha256": "c4906283810c8b378800b67930028685a41b6a051923ea9f9415346b2d657063"
+    }
+  ],
+  "review": {
+    "status": "COMPLETE",
+    "app_head_sha": "2222222222222222222222222222222222222222",
+    "acceptance_sha256": "c4906283810c8b378800b67930028685a41b6a051923ea9f9415346b2d657063",
+    "model": "synthetic-not-a-real-model",
+    "settings": {
+      "synthetic": true
+    },
+    "started_at": "2026-11-06T06:00:00+00:00",
+    "finished_at": "2026-11-06T06:00:00+00:00",
+    "findings": []
+  }
+}
