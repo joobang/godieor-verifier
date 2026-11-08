@@ -1,0 +1,40 @@
+# 검증 저장소 역할과 다음 작업
+
+공통 기준: [architecture](system/architecture.md), [plan](system/plan.md), [policies](system/policies.md).
+소유 대상은 기준·독립 기대값·snapshot·검사 실행·리뷰·판정·finding 이력이다.
+앱·backend 제품 코드를 고치거나, 사용자 승인 없이 기준을 승인하지 않는다.
+verifier의 실행 위치는 Mac으로 확정됐다. 로컬 제품 연결부터 검사하고 최종 backend/DB의 클라우드 운영도 검증 대상으로 확장한다.
+실행 위치 결정만으로 sandbox/권한 격리 또는 제품 PASS가 완료되지는 않는다.
+
+## 우선 작업
+
+1. `VFY-01`: 기존 GD-001~010을 앱/백엔드/통합 검사 관찰점에 연결한다.
+   [변경 제안](../requirements/proposals/three-repositories.md)을 독립 검토하고 사용자 승인과 구분한다.
+2. `VFY-02`: evidence v2와 parser/validator를 만든다. 대상 저장소별 SHA,
+   계약·마이그레이션·기준 digest를 묶고 모든 검사·review가 정확한 조합을 참조하도록 한다.
+3. `VFY-03`: 두 Git snapshot과 별도 build 사본·일회용 DB·최소 실행 환경을 만든다.
+   OS 읽기/쓰기 경계의 허용·거부 동작을 실제 검사한다.
+4. `VFY-04`: 승인된 검사 명령을 실행해 exit code·시각·로그를 수집하고 독립 리뷰 입력/출력을 연결한다.
+   모델 식별자를 알 수 없다면 임의 생성하지 않고 미확인 상태를 남긴다.
+5. `INT-01`: 임시 DB 저장→API 응답→iOS 표시·필터→재실행을 고정 조합으로 확인한다.
+
+## 계정·학습 검증 추가 제안
+
+Google token 검증 실패·만료·audience 불일치·재로그인·로그아웃·사용자 간 데이터 격리를 독립 관찰점으로 제안한다.
+인증 fixture 통과로 실제 Google 연동/동의 화면/실기기 실행을 확인했다고 표현하지 않는다.
+검사 기준 확정과 실제 OAuth 설정은 후속이며 현재 acceptance/runtime은 유지한다.
+
+통합 학습 카탈로그 `docs/learning`은 각 저장소의 원본 문제·선택과 verifier의 재현/해결 근거를 연결한다.
+원시 token/개인정보를 카탈로그·fixture·보고서에 보관하지 않는다.
+
+## v2의 필수 실패 사례 초안
+
+- app은 새 SHA인데 backend/계약/검사 결과는 이전 조합인 경우.
+- backend만 바뀌거나 DB migration만 바뀐 경우의 이전 통합 PASS 재사용.
+- 계약 digest가 iOS 소비·backend 제공·독립 fixture에서 다른 경우.
+- app-only 성공을 전체 제품 PASS로 보고하는 경우.
+- 필수 검사가 누락·SKIPPED·ERROR이거나 AI 리뷰가 실행 결과를 대신하는 경우.
+- 실제 제공처 조회 실패를 fixture 결과로 숨기는 경우.
+
+현재 코드·schema·example·33개 자기 검사는 v1을 그대로 유지한다.
+문서 확장을 실제 runtime 지원이나 정식 제품 PASS로 표현하지 않는다.

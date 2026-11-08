@@ -1,5 +1,10 @@
 # Evidence v1
 
+이 문서는 현재 구현된 **app-only v1** 형식이다.
+backend SHA·계약·마이그레이션 조합을 고정하는 v2 설계는 `system/architecture.md`를 참조한다.
+v1 파일에 backend 필드를 덧붙여도 현재 엔진이 그 조합을 검증하는 것은 아니다.
+v2 parser/validator·회귀 검사를 구현하기 전에는 통합 제품 판정에 사용하지 않는다.
+
 `examples/evidence.json`은 가상 입력이다. 제품 실행 결과가 아니다.
 engine은 JSON을 읽으며 바이너리나 앱 코드를 실행하지 않는다.
 

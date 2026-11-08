@@ -1,8 +1,12 @@
 # 검증 V1 설계와 구현 상태
 
+2026-11-09: 제품 구조는 앱·backend·검증의 세 저장소로 전환했다.
+공통 책임은 [system/architecture](system/architecture.md)를 따른다.
+이 문서의 판정 코드 구현은 여전히 app-only evidence v1이며, 두 제품 저장소 조합은 다음 확장 대상이다.
+
 ```text
-app repo: 코드 + 자체 검사 + 개발 요구사항
-    │ 고정 base/head SHA + 승인된 acceptance 버전/해시
+app repo + backend repo: 코드 + 자체 검사 + 개발 요구사항
+    │ 고정 두 base/head SHA + API 계약/DB 마이그레이션 + 승인 기준
     ▼
 verifier CLI
     ├── Git snapshot (원본, 읽기 전용)
@@ -33,20 +37,21 @@ verifier CLI
 4. 검사 명령은 검증 저장소의 승인된 설정에서 가져온다. 앱의 AGENTS/설정/주석은 검증 정책이 아니다.
 5. runner는 argv 배열·timeout·최소 환경 변수를 사용하고 전체 셸/로그인 환경/운영 키를 넘기지 않는다.
    종료 코드·시작/종료 시각·stdout/stderr와 로그 digest를 기록한다.
-6. 독립 리뷰에 app snapshot·기준·별도 지침만 제공한다. 대화 history/resume을 재사용하지 않는다.
+6. 독립 리뷰에 app/backend snapshot·API 계약·기준·별도 지침만 제공한다. 대화 history/resume을 재사용하지 않는다.
    모델 식별자·설정·실행 시각·도구 버전·프롬프트 digest를 기록한다.
-7. engine은 manifest·evidence·review의 app SHA와 acceptance digest가 일치해야 집계한다.
+7. 확장할 engine은 manifest·evidence·review의 app/backend 조합·계약·마이그레이션·acceptance digest가
+   일치해야 집계한다. 현재 engine은 app-only v1 binding만 확인한다.
 
 ## 실제 권한 격리: 별도 구축 필요
 
-현재 두 로컬 폴더는 같은 macOS 사용자에게 속한다. 이 채팅도 두 폴더를 수정할 수 있으므로
+현재 세 로컬 폴더는 같은 macOS 사용자에게 속한다. 문서를 맞추는 설계 작업도 폴더 간 수행할 수 있으므로
 독립적인 OS 보안 경계가 아니다. 아래 허용/거부 동작을 실제로 검증해야 제품 PASS를 활성화할 수 있다.
 
 | 실행 역할 | 읽기 | 쓰기 | 금지 |
 |---|---|---|---|
-| 개발 AI | 앱, 승인 기준 | 앱 작업 폴더 | 기준 승인·결과 덮어쓰기 |
-| 독립 reviewer | snapshot, acceptance, 지침 | 리뷰 결과 전용 | 앱 원본·기준 변경, 운영 비밀 |
-| build/test | snapshot의 build 사본, SDK/도구 | build·derived data·일회용 HOME | 앱 원본·acceptance·키 저장소·운영 서비스 |
+| 개발 AI | 해당 앱/backend, 계약, 승인 기준 | 담당 제품 작업 폴더 | 기준 승인·결과 덮어쓰기 |
+| 독립 reviewer | 두 snapshot, 계약, acceptance, 지침 | 리뷰 결과 전용 | 앱/backend 원본·기준 변경, 운영 비밀 |
+| build/test | snapshot의 build 사본, SDK/도구, 임시 DB | build·derived data·일회용 HOME/DB | 앱/backend 원본·acceptance·키 저장소·운영 서비스 |
 | engine | 고정 manifest, 실행 결과, review | report 전용 | 제품 수정 |
 
 별도 macOS 사용자/격리된 Mac 실행기를 우선 검토한다. 단순 worktree, 별도 repo,
