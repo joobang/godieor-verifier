@@ -5,6 +5,8 @@ import hashlib
 import json
 import re
 
+from .subject import validate_subject, subject_digest
+
 
 EXIT_CODES = {"PASS": 0, "FAIL": 1, "REVIEW_REQUIRED": 2, "ERROR": 3}
 
@@ -42,10 +44,12 @@ def interval(item):
     require(start <= end, "종료 시각이 시작보다 빠름")
 
 
-def validate_review_shape(review):
+def validate_review_shape(review, version=1):
     """Enforce the review.schema.json contract without external dependencies."""
     fields = {"status", "app_head_sha", "acceptance_sha256", "model", "settings",
               "started_at", "finished_at", "findings"}
+    if version == 2:
+        fields |= {"subject_sha256", "run_id"}
     require(isinstance(review, dict) and set(review) == fields, "리뷰 필수/추가 필드 오류")
     require(review["model"] is None or isinstance(review["model"], str), "리뷰 model 형식 오류")
     for key in ("started_at", "finished_at"):
@@ -67,6 +71,8 @@ def assess_check(check, required, seen, evidence, acceptance_digest):
     require(check["run_id"] == evidence["run_id"], cid + ": 실행 run ID 불일치")
     require(check["app_head_sha"] == evidence["app"]["head_sha"], cid + ": 검사 app SHA 불일치")
     require(check["acceptance_sha256"] == acceptance_digest, cid + ": 검사 acceptance digest 불일치")
+    if evidence["schema_version"] == 2:
+        require(check["subject_sha256"] == subject_digest(evidence), cid + ": 검사 subject 조합 불일치")
     status = check["status"]
     require(status in ("PASS", "FAIL", "ERROR", "SKIPPED"), "알 수 없는 검사 상태")
     if status in ("ERROR", "SKIPPED"):
@@ -82,12 +88,22 @@ def assess_check(check, required, seen, evidence, acceptance_digest):
     return "pass", ""
 
 
-def assess(acceptance, evidence, acceptance_digest):
+def assess(acceptance, evidence, acceptance_digest, required_schema_version=1):
     """Return a verdict; never infer executed checks from AI prose."""
     errors, failures, reviews = [], [], []
     try:
-        require(type(evidence["schema_version"]) is int and evidence["schema_version"] == 1,
+        require(type(evidence["schema_version"]) is int and evidence["schema_version"] in (1, 2),
                 "지원하지 않는 evidence schema")
+        require(type(required_schema_version) is int and required_schema_version in (1, 2), "요청 schema 정책 오류")
+        require(evidence["schema_version"] >= required_schema_version, "요청한 최소 evidence schema 미충족")
+        version = evidence["schema_version"]
+        if version == 2:
+            validate_subject(evidence, require, hexadecimal, nonempty)
+        else:
+            require(not ({"backend", "contract", "migrations"} & set(evidence)),
+                    "v1은 backend/계약/migration 조합을 지원하지 않음")
+            require(all("subject_sha256" not in check for check in evidence["checks"]),
+                    "v2 binding을 v1으로 낮출 수 없음")
         require(nonempty(evidence["run_id"]), "run_id 누락")
         interval(evidence)
         for key in ("base_sha", "head_sha"):
@@ -141,7 +157,10 @@ def assess(acceptance, evidence, acceptance_digest):
         errors.extend(cid + ": 필수 검사 누락" for cid in required if cid not in seen)
 
         review = evidence["review"]
-        validate_review_shape(review)
+        validate_review_shape(review, version)
+        if version == 2:
+            require(review["subject_sha256"] == subject_digest(evidence), "리뷰 subject 조합 불일치")
+            require(review["run_id"] == evidence["run_id"], "리뷰 run ID 불일치")
         require(review["app_head_sha"] == evidence["app"]["head_sha"], "리뷰 app SHA 불일치")
         require(review["acceptance_sha256"] == acceptance_digest, "리뷰 acceptance digest 불일치")
         require(review["status"] in ("COMPLETE", "PENDING", "ERROR"), "리뷰 상태 오류")
@@ -199,17 +218,17 @@ def strict_json(data):
     return value
 
 
-def report(acceptance_bytes, evidence_bytes):
+def report(acceptance_bytes, evidence_bytes, required_schema_version=1):
     acceptance_digest = digest(acceptance_bytes)
     evidence = None
     try:
         acceptance, evidence = strict_json(acceptance_bytes), strict_json(evidence_bytes)
-        result = assess(acceptance, evidence, acceptance_digest)
+        result = assess(acceptance, evidence, acceptance_digest, required_schema_version)
     except (ValueError, UnicodeError, RecursionError) as exc:
         evidence = None
         result = {"verdict": "ERROR", "errors": ["JSON 입력 오류: " + str(exc)],
                   "failures": [], "review_required": []}
-    return {"schema_version": 1, "evaluated_at": datetime.now(timezone.utc).isoformat(),
+    return {"schema_version": 1, "required_schema_version": required_schema_version, "evidence_schema_version": evidence.get("schema_version") if isinstance(evidence, dict) else None, "evaluated_at": datetime.now(timezone.utc).isoformat(),
             "acceptance_sha256": acceptance_digest, "evidence_sha256": digest(evidence_bytes),
             "evidence": evidence, **result}
 

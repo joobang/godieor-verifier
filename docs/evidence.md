@@ -31,3 +31,7 @@ engine은 입력 binding·형식·필수 검사·종료 코드를 확인한다.
 
 출력에는 acceptance 실제 digest, 원본 evidence SHA-256, 전체 입력, 판정 시각과 reasons를 포함한다.
 진위가 확인된 runner와 연결되기 전에는 검증 시스템을 운영용으로 사용하지 않는다.
+
+## v2 구현
+
+앱·backend·계약·migration·기준·verifier 바인딩을 지원하는 [v2](evidence-v2.md)가 추가됐다. 위 v1 설명은 호환 형식이며 v1은 계속 앱 전용이다. 실행 진위는 runner 후속이다.
