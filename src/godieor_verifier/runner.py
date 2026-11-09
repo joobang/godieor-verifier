@@ -29,6 +29,10 @@ def write_json(path, data):
 
 def profile(build, source, home, tools, cache):
     # Deliberately no access to the invoking user's HOME, repos, Docker socket or artifacts.
+    # Foundation atomic writes / Xcode use the host's Darwin user temp directory
+    # (/private/var/folders/.../T) even with TMPDIR redirected. Do not grant that
+    # shared directory here: it is outside the per-run writable boundary.
+    # A separately isolated build identity/environment is still required for iOS.
     quote = lambda p: json.dumps(str(p))
     def aliases(paths):
         result=[]

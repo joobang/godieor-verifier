@@ -9,3 +9,5 @@ SHA 문자열만 지정해도 Git replace ref나 로컬 export속성이 추출 �
 실행기는 digest고정PostgreSQL 이미지를 기존DB와 다른 tmpfs/동적loopback포트로 실행하고 고유컨테이너명으로 정리한다. run응답timeout도 생성시도부터 cleanup을 시도하도록 수정했다. 이timeout경로는 mock회귀검사이며 실제Docker 장애주입은 아니다.
 
 실제 제한실행에서 backend47개검사와 새DBmigration/반복수집ID/달력·상세smoke를 수행했다. iOS 제한빌드는 임시쓰기 경계문제를 드러냈고 당시실행을 실패로 기록했다. 원본환경에서 과거빌드가 성공했다는 사실로 이실행의 실패를 덮어쓰지 않는다. 실행한단계와 전체GD승인검사는 별개이므로 부족한필수검사는 SKIPPED→ERROR로 남긴다. 관련Git·실행정책·런타임이 바뀌면 이주장을 재검토한다.
+
+후속 재현(2026-11-09): Foundation `NSDictionary writeToFile:atomically:NO` 및 일반 `NSData writeToURL`은 제한된 build HOME에 정상 저장됐지만, `atomically:YES`와 `NSDictionary writeToURL:error:`는 동일 경로에서 EPERM이었다. macOS 사용자 임시 폴더의 물리 경로 `/private/var/folders/.../T`를 별도로 허용하면 두 atomic 쓰기가 성공했고, `C`만 허용하면 실패했다. 이는 기존 `/var/folders` 별칭만 허용한 시도와 달리 실제 물리 경로를 비교한 결과다. Xcode도 `DerivedData` 초기 오류 없이 빌드 단계로 진입했지만 `swbuild.tmp.*` 및 링커 문제로 exit65였다. 사용자 공용 T 폴더 전체를 허용하면 격리 목표가 약화되므로 코드에 반영하지 않았다. 외부의 지정된 실행 사용자 환경은 후속 설계 과제이며 아직 안전성을 입증하지 않았다.
