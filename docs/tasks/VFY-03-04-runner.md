@@ -70,3 +70,11 @@
 ```
 
 Node 도구/캐시가 없어졌으면 신뢰하는 Node24와 npm 경로를 새로 정하고 버전을 기록한다. 외부망은 준비 단계만 허용되며 실제 DB credential은 이후 일회용DB 단계에서만 주입한다. LEARN-0014에 실제 발견/가상회귀/미해결 격리를 구분해 남겼다.
+
+### 2026-11-09 실행 경계 후속 설계 (codex-isolation-04)
+
+- 시작 상태: verifier `aaad6a2` / `codex/vfy-03-runner`, app `7c868d9` / `codex/app-01-review-fixes`, backend `2a9d06f` / `dev`. 모두 clean. VFY-03/04·GD-001~010 초안, LEARN-0014 연결.
+- 범위: 기존 제한 Xcode 로그를 재확인하고 전용 사용자/실행 서비스 또는 run별 VM 설계·재현 게이트를 `docs/runner-isolation.md`에 명문화. 예상 실패는 사용자별 공용 `T` 경로를 제품 sandbox에 개방하거나 전용 UID만으로 `setsid` 제거를 보장한다고 오인하는 것.
+- 기존 `/private/tmp/godieor-xcode-physical-cache.log`에는 `swbuild.tmp.*`의 물리 경로 `/private/var/folders/.../T` EPERM과 xcrun 캐시 오류가 남아 있다. 새로운 Xcode 실행·전용 계정 생성은 하지 않았다.
+- 문서 변경 뒤 `./scripts/self-test.sh` 62개 통과, `git diff --check` 성공. 실행 격리·Xcode 문제를 해결했다는 의미는 아니다.
+- 다음: 전용 실행 ID의 최소 환경 마련 후 Foundation probe→제한 iOS 빌드→`setsid` timeout/강제종료 시나리오를 실제 검사. 어떤 방식도 아직 구현된 격리로 간주하지 않으며 `isolation_verified=false`, 기존 iOS exit65, P5 open 및 통합 PASS 없음 유지.
