@@ -74,6 +74,13 @@ class RunnerTests(unittest.TestCase):
         self.assertIn('(deny default)',p)
         self.assertNotIn('(allow default)',p)
         self.assertNotIn('/var/run/docker.sock',p)
+        # Foundation/Xcode atomic output needs host Darwin temp, but exposing it
+        # would let checked code modify unrelated user-scoped temporary files.
+        writable=next(line for line in p.splitlines()
+                      if line.startswith('(allow file-write* (subpath '))
+        self.assertEqual(writable, '(allow file-write* '
+                         f'(subpath "{(self.root/"b").resolve()}") '
+                         f'(subpath "{(self.root/"h").resolve()}"))')
 
     def test_replace_ref_cannot_change_pinned_blob(self):
         (self.repo/'a').write_text('original');original=self.commit()

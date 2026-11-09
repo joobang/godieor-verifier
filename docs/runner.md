@@ -25,6 +25,8 @@ Git 실행은 고정 /usr/bin/git, 최소환경, fsmonitor/hooks/replace ref·la
 
 macOS sandbox-exec 기본거부 프로필에서 빌드/임시 HOME만 쓰기, snapshot과 시스템·도구 경로 읽기를 허용한다. 원래 HOME/.env/운영키·Docker socket을 제품 프로세스에 전달하지 않는다. Docker 제어는 실행기의 고정 인자로 수행한다. 생성한 가상 canary 읽기 거부, 제품 원본 읽기 거부, snapshot 읽기 허용/쓰기 거부, 임시HOME 쓰기 허용을 probe한다. 이 제한된 probe 성공도 전체 권한격리 검증은 아니며 **isolation_verified=false를 유지**한다. /Library·/opt/homebrew 등 시스템 도구 디렉터리의 세부 비밀 분류까지 검증하지 않았고, 메타데이터 조회는 허용한다.
 
+**iOS 제한 빌드 현황(2026-11-09):** macOS Foundation의 atomic plist 쓰기는 `TMPDIR`을 별도 HOME으로 설정해도 사용자별 Darwin 임시 디렉터리의 실제 경로 `/private/var/folders/.../T`에 쓰기 권한이 없으면 EPERM이 발생한다. 같은 경로를 진단용으로 허용하면 `DerivedData/info.plist`·`LogStoreManifest.plist` 오류가 사라지고 Xcode 컴파일/링크까지 진행하지만 이후 `swbuild.tmp.*` 오류 등으로 exit65가 계속된다. 이 사용자 공유 T 디렉터리를 runner sandbox에 허용하면 다른 작업의 임시 파일까지 접근할 수 있으므로 정식 프로필에서는 허용하지 않는다. 실제 보안 경계를 보존하려면 별도 사용자/격리된 환경에서 Xcode를 실행하는 방안을 먼저 검토해야 한다. 해당 방법은 아직 구현·검증되지 않았다.
+
 ## 실행·결과
 
 고정 recipe: 경계 probe → dependency 설치 → Prisma generate → tsc → backend 자체 tests → digest 고정 PostgreSQL tmpfs/임시 loopback port → migrate → 독립 DB smoke → iOS generic Simulator build. 기존 제품 DB·포트·볼륨은 사용하지 않는다. DB password/커서 키는 매번 임시 생성하고 runner 출력에 쓰지 않는다. 마이그레이션 manifest는 모든 파일 상대경로/digest의 canonical JSON hash다. 앱의 계약 참조와 backend 계약manifest/파일을 대조한다.

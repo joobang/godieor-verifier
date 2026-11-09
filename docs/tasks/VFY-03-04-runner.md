@@ -50,6 +50,14 @@
 - `allow default` 등 광범위한 권한을 사용하는 추가 진단은 자동 승인 심사에서 거부되어 실행하지 않았다. 고정 runner 프로필은 완화하지 않았으며 `isolation_verified=false`, iOS 빌드 실패, P5 미해결, 통합 PASS 없음은 유지한다.
 - 다음: 기존 임시 build 사본과 Xcode의 실제 경로를 대상으로 **필요한 권한만 제한적으로 확인**할 별도 승인된 진단을 설계한다. 승인 전에는 광범위 sandbox 완화를 실행하지 않는다.
 
+### 2026-11-09 후속 재개 · Foundation atomic 쓰기 원인 분리 (codex-eprem-03)
+
+- 기준 verifier `b1d5edd`, app `7c868d9`, backend `2a9d06f` (시작 상태 clean). VFY-03/04, GD-001~010 초안. 변경 범위는 sandbox 보안 경계 검사와 실행/원인 기록. 예상 실패는 임시 캐시 위치를 잘못 추정하거나 공유 임시 경로까지 열어 snapshot 격리를 훼손하는 것이다.
+- `DerivedData`를 임시 HOME으로 이동하거나 `/private`, `/tmp` 등의 상위 디렉터리 literal 읽기 권한을 추가해도 Xcode exit65와 plist EPERM 동일.
+- 임시 Objective-C/Foundation 진단 프로그램에서 같은 sandbox 아래 `NSDictionary writeToFile:atomically:NO`와 `NSData writeToURL` 성공, `atomically:YES`와 `NSDictionary writeToURL:error:` 실패. macOS 물리 경로 `/private/var/folders/gt/.../T` 쓰기 권한만 추가하면 atomic 저장 성공. `C`만 허용하면 실패. 기존 `/var/folders/.../T` 허용 시도는 물리 경로를 포함하지 않았다.
+- T/C 두 디렉터리의 물리 경로와 별칭에 진단용 쓰기 허용 후 Xcode 재실행: 초기 DerivedData plist 오류 0건, 실제 컴파일 및 링커 단계 진입. 그러나 `swbuild.tmp.*`의 EPERM와 두 아키텍처의 링크 실패로 **exit65**. 로그 `/private/tmp/godieor-xcode-physical-cache.log` (임시 분석파일, 제품/evidence 아님). Xcode 제한 빌드 성공 확인은 아니다.
+- 공용 사용자 임시 T 디렉터리 전체를 제품 프로세스에 허용하면 다른 앱/프로세스의 임시 자산을 수정할 위험이 있어 runner profile에는 반영하지 않음. runner 주석·테스트와 docs/runner.md 및 LEARN-0014에 한계 기록. Xcode 빌드의 별도 사용자/격리 환경 설계가 다음 해결 과제. P5 setsid 수명 격리, 전체 runner 및 통합 PASS 미해결 상태 유지.
+
 재실행 예시(40자리 SHA는 원본 run의 evidence.json 또는 새로 확정한 조합을 사용):
 
 ```sh
