@@ -40,6 +40,16 @@
 3. 우선 Xcode 제한빌드 EPERM 원인을 좁힌다. 새 outfile을 사용해 재실행하고 기존 evidence를 덮어쓰지 않는다. 후손수명격리를 해결할 수 없다면 open finding으로 유지하고 신뢰할 수 없는 임의 코드 실행에 사용하지 않는다.
 4. 의미 있는 코드 변경 후 자기검사·분리 컨텍스트 리뷰, 실제 실패 경로 재현, 카드·공통사본·학습기록 업데이트. 승인 기준은 임의로 승인하지 않는다.
 
+### 2026-11-09 후속 진단 · VFY-03/04 (codex-eprem-02)
+
+- 재개 시 app `codex/app-01-review-fixes` HEAD `7c868d9`, verifier `codex/vfy-03-runner` HEAD `1cb7c9d`, backend `dev` HEAD `2a9d06f`이며 각 checkout은 clean. 이전 기록의 HEAD를 새 실행의 binding으로 재사용하지 않는다.
+- 기존 `/private/tmp/godieor-vfy-run-391f70fd/build/app` 사본에서 `runner.profile()`을 사용한 최소 재현을 실행했다. 현재 Codex 외부 sandbox 아래에서 중첩 `sandbox-exec`은 `sandbox_apply: Operation not permitted`(exit 71)였고, 승인된 제한 실행 환경에서 동일 재현이 가능했다.
+- 제한 프로필에서 셸의 임시 HOME 및 DerivedData/Logs/Build 파일 쓰기는 exit 0. `xcrun --find xcodebuild`와 `xcodebuild -version`도 exit 0이나 `/var/folders/.../T/xcrun_db-*` 캐시 생성 EPERM 메시지가 발생했다. `TMPDIR` 환경값은 임시 HOME 아래여도 xcrun은 이 경로에 접근했다.
+- 앱 사본에서 동일 프로필로 `scripts/build-ios.sh`를 실제 실행하면 exit 65로 `LogStoreManifest.plist`/`DerivedData/info.plist` 쓰기 EPERM이 재현됐다. xcrun 캐시 경로 `/var/folders/gt/4z3x36157d3bq4256swptnsw0000gn/T`만 추가 쓰기 허용한 비교 실행도 exit 65였다. 따라서 xcrun 캐시만 해결해도 Xcode 빌드가 성공한다는 가설은 반증됐다.
+- sandboxd 관련 unified log 쿼리는 해당 기간 거부 이벤트를 반환하지 않았다. Xcode 내부/XPC 권한·파일 작업 종류·경로 정규화 중 어느 것이 주원인인지는 미확정이다. 모든 실행은 기존 임시 build 사본 대상으로, 새 전체 runner/evidence 생성은 하지 않았다.
+- `allow default` 등 광범위한 권한을 사용하는 추가 진단은 자동 승인 심사에서 거부되어 실행하지 않았다. 고정 runner 프로필은 완화하지 않았으며 `isolation_verified=false`, iOS 빌드 실패, P5 미해결, 통합 PASS 없음은 유지한다.
+- 다음: 기존 임시 build 사본과 Xcode의 실제 경로를 대상으로 **필요한 권한만 제한적으로 확인**할 별도 승인된 진단을 설계한다. 승인 전에는 광범위 sandbox 완화를 실행하지 않는다.
+
 재실행 예시(40자리 SHA는 원본 run의 evidence.json 또는 새로 확정한 조합을 사용):
 
 ```sh
