@@ -19,3 +19,5 @@ SHA 문자열만 지정해도 Git replace ref나 로컬 export속성이 추출 �
 동일 원인에 대한 재현성 보강: Objective-C/Foundation 합성 plist probe를 저장소에 추가했다. 같은 Mac UID 501의 일반 실행에서 비원자적/원자적 쓰기가 모두 성공했으며, Codex의 기존 sandbox 안에 runner `sandbox-exec`을 중첩했을 때는 `sandbox_apply: Operation not permitted`(71)로 프로그램 실행 전에 거부됐다. 이 두 결과는 과거 제한 실행에서 관찰한 atomic EPERM을 반증하지 않는다. 별도 실행 ID의 제한된 환경에서 다시 비교해야 한다.
 
 2026-11-10 후속: Foundation 비교 실행을 도구화해 실제 runner 프로필·digest·단계별 로그와 종료코드를 보존하고, 성공한 프로세스의 실제 plist 내용도 확인한다. 현재 UID 501에서 일반 실행은 두 저장 모두 성공했고, 제한 프로필은 실행 자체가 시작돼 `non_atomic=true, atomic=false`/exit2를 재현했다. 과거 중첩 sandbox exit71과 달리 이번에는 Foundation 저장 실패를 관찰했다. 사용자 공유 Darwin T 권한은 추가하지 않았다. 전용 UID/Xcode/후손 수명 검증은 여전히 미실행이며 이 결과는 독립 승인 evidence가 아니다.
+
+2026-11-10 P5 실제 재현: 고정 합성 후손의 heartbeat 증가를 runner 반환 뒤 비교했다. 실제 제한 프로필의 정상 종료와 timeout 모두 일반 자식은 정지했지만 setsid 자식은 계속 파일을 갱신했다. 각 합성 자식은 자체 2초 기한과 4초 alarm을 가지므로 재현은 짧게 끝난다. 이는 제품 코드 전체 정리 구현이 아니라 기존 한계의 관찰이다. PID 존재나 `.done` marker를 OS 수명 격리 증거로 사용하지 않았다. 전용 UID/VM 선택은 아직 사용자 확정이 없으며 계정/가상화 도구를 설치하지 않았다.

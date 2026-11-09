@@ -49,3 +49,25 @@ probe 관찰값이 기록된다. 종료코드 0과 두 plist의 실제 합성 �
 4. **증거:** 실행 UID·환경 식별자, 프로필 digest, 단계별 로그/exit, 자원 정리 확인을 고정 subject/evidence와 연결하고 별도 reviewer가 재현한다. 기존 고정 run의 SHA를 새로운 성공 결과로 바꾸어 적지 않는다.
 
 위 항목을 통과하지 못하면 ios-build 실패·미실행 check를 그대로 유지한다. acceptance 승인과 최종 PASS는 별도 절차다.
+
+## P5 최소 재현 (2026-11-10)
+
+관리자 권한 없이 `scripts/probe-process-lifetime --mode normal --sandbox NEW_DIR`와
+`--mode timeout --sandbox OTHER_NEW_DIR`로 현재 runner의 그룹 정리 한계를 재현한다.
+도구는 고정 합성 Python worker만 실행하며, 일반 자식과 `setsid` 자식의 heartbeat가
+runner 반환 후에도 증가하는지 비교한다. PID 존재는 좀비·PID 재사용과 혼동되므로
+생존 판정 근거로 사용하지 않는다. worker는 약 2초 뒤 스스로 끝나며 각 자식에
+4초 alarm을 별도로 건다. 도구는 추가로 4.2초 대기하고 자체 만료 marker를 기록한다.
+이 합성 worker의 자기 종료는 임의 제품 코드의 수명 격리나 실제 PID 정리 보장이 아니다.
+
+`result.json`과 `worker.log`, sandbox 프로필/digest를 저장한다. 준비 완료 신호가
+없거나 예상 정상/timeout 경로가 아니면 inconclusive(exit3), 탈출 관찰 또는 미관찰은
+exit2다. 미관찰도 격리 PASS로 승격하지 않는다. 항상 isolation_verified=false,
+cleanup_verified=false다. 기존 출력은 재사용하지 않는다. 새 서비스를 설치하거나
+호스트 프로세스를 PID로 강제 종료하지 않는다. 강제 호스트 종료·재부팅은 미검사다.
+
+현재 UID501의 실제 runner sandbox에서 정상 종료와 timeout 모두 일반 자식의 heartbeat는
+멈추고 setsid 자식만 계속 증가했다. 두 분리 자식은 이후 자기 만료 marker를 남겼다.
+따라서 `start_new_session`/`killpg`만으로 P5를 해결하지 못한다. 로컬
+`man launchd.plist`의 AbandonProcessGroup 설명도 같은 process group 정리만 명시하므로
+기본 launchd job 등록을 전체 후손 종료의 보장으로 제안하지 않는다.

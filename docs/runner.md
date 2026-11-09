@@ -46,3 +46,7 @@ Foundation 원자적 쓰기를 비교하는 최소 재현 도구 `scripts/probe-
 timeout 또는 정상 종료 후 최초 프로세스 그룹을 정리한다. **자식이 setsid로 별도 세션으로 이탈하면 이 방식으로 완전 제거를 보장할 수 없다.** 독립 리뷰에서 가상 자식으로 재현한 미해결 항목이다. 자식도 sandbox 제한은 상속하지만 전체 자원/수명 격리는 별도 컨테이너·전용 사용자/실행 서비스 설계가 필요하다. 임의 비신뢰 제품 코드를 안전하게 실행할 준비가 끝났다고 해석하지 않는다.
 
 DB는 실행 시도부터 고유 이름으로 finally 정리한다. Docker CLI timeout 뒤에도 삭제를 시도한다. 강제 호스트 종료/전원 손실 때의 재시작 청소는 후속이다. 입력이 잘못돼 snapshot 준비부터 실패하면 ERROR로 끝나고 부분 출력 디렉터리는 진단용으로 남는다. 실행 명령과 로그가 실제로 생성됐다는 사실도 OS 격리·검증 기준 승인·통합 제품 PASS를 대신하지 않는다.
+
+P5의 짧은 합성 재현은 `scripts/probe-process-lifetime --mode normal --sandbox NEW_DIR`
+및 `--mode timeout --sandbox OTHER_NEW_DIR`를 사용한다. 실제 관찰과 한계는
+[runner-isolation.md](runner-isolation.md)의 P5 절 참조. 탈출이 관찰되지 않아도 PASS가 아니다.
