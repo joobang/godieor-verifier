@@ -17,3 +17,5 @@ SHA 문자열만 지정해도 Git replace ref나 로컬 export속성이 추출 �
 추가 사전점검 구현: `scripts/check-isolated-ios-host`가 OS 계정 기준 UID/HOME 및 Darwin T의 물리 경로·소유·접근 모드를 확인한다. 실제 사용자 UID 501에서는 `same_uid_as_caller`/`home_overlaps_caller_home`로 거부됐으며 전용 사용자 합격 사례는 아직 없다. 모의 조건 4개 검사는 자기검사이고 실제 OS 격리 검증이 아니다. 결과는 항상 `isolation_verified=false`로 고정한다.
 
 동일 원인에 대한 재현성 보강: Objective-C/Foundation 합성 plist probe를 저장소에 추가했다. 같은 Mac UID 501의 일반 실행에서 비원자적/원자적 쓰기가 모두 성공했으며, Codex의 기존 sandbox 안에 runner `sandbox-exec`을 중첩했을 때는 `sandbox_apply: Operation not permitted`(71)로 프로그램 실행 전에 거부됐다. 이 두 결과는 과거 제한 실행에서 관찰한 atomic EPERM을 반증하지 않는다. 별도 실행 ID의 제한된 환경에서 다시 비교해야 한다.
+
+2026-11-10 후속: Foundation 비교 실행을 도구화해 실제 runner 프로필·digest·단계별 로그와 종료코드를 보존하고, 성공한 프로세스의 실제 plist 내용도 확인한다. 현재 UID 501에서 일반 실행은 두 저장 모두 성공했고, 제한 프로필은 실행 자체가 시작돼 `non_atomic=true, atomic=false`/exit2를 재현했다. 과거 중첩 sandbox exit71과 달리 이번에는 Foundation 저장 실패를 관찰했다. 사용자 공유 Darwin T 권한은 추가하지 않았다. 전용 UID/Xcode/후손 수명 검증은 여전히 미실행이며 이 결과는 독립 승인 evidence가 아니다.

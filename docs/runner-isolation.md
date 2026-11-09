@@ -32,8 +32,14 @@ Xcode 자체의 `xcodebuild`/`xcrun`/`swbuild`가 전용 사용자의 실제 Dar
 
 원자적 쓰기 최소 재현은 `./scripts/probe-foundation-atomic /private/tmp/NEW-PROBE-DIR`로
 실행한다. 미리 존재하지 않는 디렉터리여야 하며 도구가 작은 Objective-C/Foundation
-프로그램을 해당 경로에 컴파일하고 합성 plist 두 개를 쓴다. stdout에는 `non_atomic`,
-`atomic`의 각 성공 여부가 JSON으로 출력되며 둘 다 성공해야 exit0, 쓰기 실패는 exit2다.
+프로그램을 해당 경로에 컴파일하고 합성 plist 두 개를 쓴다. stdout과 `result.json`에는 실행 모드, UID, 단계별 종료코드·로그 SHA-256,
+probe 관찰값이 기록된다. 종료코드 0과 두 plist의 실제 합성 내용까지 확인해야 exit0이며,
+컴파일·실행·내용 검증 실패는 exit2다. 기존 출력 경로(끊어진 symlink 포함)는 exit64로 거부한다.
+`--sandbox NEW-PROBE-DIR`은 컴파일 후 바이너리를 실제 runner 프로필에서 실행하고
+`sandbox.sb`와 그 digest를 보존한다. 컴파일은 sandbox 밖이며 전체 도구가 격리된 것은 아니다.
+공유 Darwin T 디렉터리 쓰기는 허용하지 않는다. `probe.log`의 실행 전 sandbox 거부와
+`non_atomic=true, atomic=false` 관찰을 구분한다. 출력 형식은 기존 두 boolean JSON에서
+진단 결과 객체로 변경됐으며 원래 관찰값은 `probe_observation`에 있다.
 일반 실행은 OS 기본 권한만 확인한다. **같은 바이너리를 실제 제품 제한 sandbox에서 실행한
 결과**와 구분하여 기록해야 하며 이 도구가 격리 여부를 판정하지는 않는다.
 
