@@ -26,7 +26,8 @@
 | [LEARN-0002](entries/0002-verdict-and-evidence.md) | AI가 통과했다고 말해도 검사가 필요한 이유 | 검증기 구현 사례 | bootstrap 엔진 자기 검사 근거 있음, 운영 적용 전 |
 | [LEARN-0003](entries/0003-independent-review-found-engine-gaps.md) | 독립 리뷰가 기존 테스트의 빈틈을 찾은 사례 | 개발 중 결함 해결 | 4건 재현·수정·독립 재확인, 사용자 설명 미기록 |
 | [LEARN-0004](entries/0004-three-repository-boundaries.md) | 세 저장소의 책임과 검증 버전 조합 | 설계 변경 | 문서 반영, runtime 확장·세부 정책 미확정 |
-| [LEARN-0005](entries/0005-contract-time-integrity.md) | 캘린더 API·DB의 날짜/관계/조회 버전 분리 | 예방 설계 | 계약 초안, DB/런타임·독립 실행 미검증 |
+| [LEARN-0005](entries/0005-contract-time-integrity.md) | 캘린더 API·DB의 날짜/관계/조회 버전 분리 | 예방 설계 | 계약 설계 기록, 후속 로컬 구현은 LEARN-0006 / 독립 검증 전 |
+| [LEARN-0006](entries/0006-local-pipeline.md) | 로컬 가상 제공처 파이프라인과 실제 출처의 근거 분리 | 초기 구현 | 작성자 실행, 독립 검증/실제 연동 전 |
 
 ## 가볍게 유지하는 방법
 

@@ -1,23 +1,31 @@
 {
-  "contractVersion": "0.1.0-draft.1",
+  "contractVersion": "0.1.0-draft.2",
   "status": "draft-not-approved",
   "ownerRepository": "https://github.com/joobang/godieor-backend",
-  "backendCommit": "884c7cd7d553910094913f860b34682bfd2559ff",
+  "backendCommit": "625811830172c8ceb08ef2a1ab10fd44a1abd53a",
   "manifestPath": "contracts/manifest.json",
-  "manifestSha256": "53a22dffc04db62531e25f5e712822596d5a54f9900b94df1bab4605d4f43b36",
+  "manifestSha256": "8dfc69a8c6a5f9feb91f2d0cf6d661eec16a1aacb8e980b7abe880cd0b1f3b1e",
   "files": {
-    "contracts/openapi.yaml": "5e6cae59f237d2f902b93ef34d50fb968bfb58ffd993d7704ed71a720e3140cd",
-    "contracts/database.sql": "dff5ff01a16e1a6a61814e5fbec368697b381043a7a73362b8a5165a517ad226",
-    "contracts/database.md": "a5d904554c6205ca1711b584ab0fd4cd3b54c9278688d406d5a891db360b5c85",
-    "contracts/README.md": "191943c49493c5c817f15cc19538247ddc5aa19e4e0f893640566cd800c9c3b0",
+    "contracts/README.md": "0436284a65a419b3d8ee1e38feef578d238d4b5a02a77dc07fc22d6e52503083",
+    "contracts/database.md": "17fe8b5b6578494048b0ec063d38fb8c5ab0384df0819a4b4bd6a4775579cec3",
+    "contracts/database.sql": "84eced22d0a7d227fba54de861cea1a037069715df5a5571e08509eef41a88cf",
     "contracts/examples/README.md": "13fbecc0d2048ef245f27d950b62ec002e0163bb90dfdd90ae1cf82f2a2f82ec",
     "contracts/examples/calendar.json": "113ade2ffb24453d6c7843533b6d5c407c8f20c4536b2fb9ff09710bb2b6919c",
     "contracts/examples/event-detail.json": "8402b32fb0ebf539c3014359d54cb9130ebf2761b300893d60c631b5bd33f53f",
     "contracts/examples/events-page.json": "a2d29393051ab7e27c9e55c284da22afc29be186c32d588676779a5204c1f45b",
-    "contracts/examples/settings.json": "6556f1aa9313eb40b014f3bb2caea8b882eed3a658ad2bd2e5a303735b0831b5"
+    "contracts/examples/settings.json": "6556f1aa9313eb40b014f3bb2caea8b882eed3a658ad2bd2e5a303735b0831b5",
+    "contracts/implementation.md": "59074c6a710abbacb6b12c223bb64cbb9db70d83c3c6022f929f58d916feb98c",
+    "contracts/openapi.yaml": "c73ab7998625a6eaf32c9645c87c46c22651feb2fad9e4bc664630779d48e7da"
   },
-  "policyRevision": "SYNC-2026-11-09-12",
-  "independentReview": "pending",
-  "runtimeVerification": "not-run",
-  "sourceState": "committed"
+  "runtimeFiles": {
+    "prisma/schema.prisma": "bfacbf63b16425f1b80e0db6d1a70f6dee727757cf754e2c414cbe80ad60b931",
+    "prisma/migrations/202611090001_initial/migration.sql": "29ef8ef0d520f44b6a633e8f017144a3e2b2199189461a88ba99bc296c42f5b9",
+    "prisma/migrations/migration_lock.toml": "1db17a8d051aa136110736752c5e1f8b7ed92b6ea8e803112fbbe2497047c210",
+    "package-lock.json": "90946e32251273e70be48ea5069401c448f51fc0bd856cf62e4a32007a8e0b88"
+  },
+  "policyRevision": "SYNC-2026-11-09-13",
+  "contractReview": "author-review-recorded-independent-review-pending",
+  "runtimeStatus": "implementer-local-startup-and-fixture-ingestion-recorded",
+  "independentVerification": "not-run",
+  "tests": "not-added-or-run"
 }
