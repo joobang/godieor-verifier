@@ -55,3 +55,5 @@ Google token 검증 실패·만료·audience 불일치·재로그인·로그아�
 OTT는 최초 공개일만 제공한다. 회차별 공개/완결은 제외하며 시즌별 최초 공개 포함은 후속 추천안 수락으로 확정했다. 메인은 선택한 캘린더 중심안이다.
 
 로그인 전 공개 일정 조회, Google 로그인 후 찜·설정 저장, V1 알림 제외를 로컬 구현 계약/검사 초안에 반영한다.
+
+API·DB 계약의 고정 참조는 docs/contracts/reference.json, 독립 관찰점 초안은 requirements/proposals/api-database-contract.md다. 승인 기준/판정에는 아직 반영하지 않는다.
