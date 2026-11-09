@@ -25,6 +25,8 @@ verifier는 최종 구성에서도 Mac에서 필요할 때 실행한다. 제품 
 
 ## 문서
 
+- [현재 상태·새 대화 시작점](docs/system/status.md) · [계정·모델 인계 절차](docs/system/handoff.md)
+  (독립 제품 검토는 구현용 대화·웹 전달본을 상속하지 않음)
 - [세 저장소 공통 설계](docs/system/architecture.md) · [작업 순서](docs/system/plan.md) · [정책 질문](docs/system/policies.md)
 - [검증 저장소의 확장 작업](docs/repository-plan.md) · [acceptance 변경 제안](requirements/proposals/three-repositories.md)
 - [실행 경계와 V1 구축 순서](docs/architecture.md)
