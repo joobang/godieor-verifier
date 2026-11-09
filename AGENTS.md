@@ -8,7 +8,7 @@
   독립 제품 검토 세션에는 구현 작업 카드·구현용 웹 전달본·구현 대화를 주입하지 않고 기존 고정 입력 절차를 따른다.
 - 세 저장소 책임·정책 질문·작업 순서는 `docs/system/`을 읽는다. 공통 문서 원본은 app이다.
 - 검증 범위는 고정 app/backend SHA 조합, API 계약·마이그레이션·기준 digest를 포함하도록 확장한다.
-  현재 evidence v1은 app-only이므로 backend 통합 검증을 수행했다고 표현하지 않는다.
+  v1은 app-only, v2는 전체조합 선언 binding이다. 통합runner는 최소schema2를 강제하며 실제 실행 증명 없이 backend 통합 검증을 수행했다고 표현하지 않는다.
 - 제품 코드를 수정하지 않는다. 검사 기준 변경은 제안만 하며 사용자 승인 없이 승인 상태를 만들지 않는다.
 - `requirements/acceptance.yaml`의 requirement ID·버전·파일 해시를 evidence에 기록한다.
 - 통합 학습 카탈로그는 `docs/learning`이다. app/backend의 원본 ADR·문제 기록과 독립 run을 연결한다.
