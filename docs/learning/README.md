@@ -28,6 +28,7 @@
 | [LEARN-0004](entries/0004-three-repository-boundaries.md) | 세 저장소의 책임과 검증 버전 조합 | 설계 변경 | 문서 반영, runtime 확장·세부 정책 미확정 |
 | [LEARN-0005](entries/0005-contract-time-integrity.md) | 캘린더 API·DB의 날짜/관계/조회 버전 분리 | 예방 설계 | 계약 설계 기록, 후속 로컬 구현은 LEARN-0006 / 독립 검증 전 |
 | [LEARN-0006](entries/0006-local-pipeline.md) | 로컬 가상 제공처 파이프라인과 실제 출처의 근거 분리 | 초기 구현 | 작성자 실행, 독립 검증/실제 연동 전 |
+| [LEARN-0007](entries/0007-ott-source-evidence.md) | OTT 공식 공지·RSS와 최초 공개일 근거의 차이 | 실제 출처 조사 | 작성자 공개 접근 확인, 제품 연동/독립 검증 전 |
 
 ## 가볍게 유지하는 방법
 
