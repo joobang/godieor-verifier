@@ -42,3 +42,24 @@
   입력은 개발 사용자 소유·다른 사용자 쓰기 금지, incoming은 700+godieorbuild의 명시적 생성 ACL만 추가.
   개인 HOME/원본 checkout 권한은 변경하지 않았다.
 - 현재 미실행: UID502 내 사전점검·파일 경계·Foundation/Xcode 검사. P5 open/격리 미검증/통합 PASS 없음.
+
+### UID502 실제 사전점검 및 접근 차단 · 2026-11-10
+
+- 비공개 입력 도구의 첫 인증은 macOS PAM이 거부했다. 종료 처리 중 setuid su 그룹에 signal을 보내려다 권한 오류가 났으나, 이후 EOF 처리에서 자연 종료를 기다리도록 임시 전환 도구를 고쳤다. 실패 인증의 비밀 파일은 폐기했으며 값은 기록하지 않았다.
+- 비공개 재입력 후 `su -l godieorbuild -c ...` exit0. 관리자/root 전환 없이 UID502로 고정 진단 shell 실행.
+- staging `/Users/Shared/godieor-account-check-4b8fe0c2/incoming/run`에 결과 보존.
+  입력 고정점 app39cd67a/verifierab8fb90은 당시 검사 조합이며 새 문서 HEAD로 재라벨하지 않는다.
+- 실제 `check-isolated-ios-host`: exit0, ready_for_manual_probe=true, effective_uid502,
+  Darwin T `/private/var/folders/22/pq7ng_417dx9nwnswkmsdz700000gp/T`, isolation_verified=false.
+- Foundation 일반 실행 exit0, 두 plist 내용 확인. 기존 runner 제한 실행 exit2,
+  non_atomic=true/atomic=false. 계정 생성만으로 기존 profile 문제가 해결되지 않음을 확인.
+- UID502의 os.access: 기존 개발 HOME/원본 app README 읽기 가능·쓰기 불가,
+  고정 snapshot 읽기 가능·쓰기 불가. 실제 내용/비밀을 읽어 fixture로 만들지 않았다.
+- 이 접근 노출을 줄이기 위해 기존 HOME 소유자로서 `/bin/chmod +a# 0 'user:godieorbuild deny list,search' /Users/dojoohwan` 실행.
+  `ls -lde`로 선두 user-specific deny ACL 확인. 다른 사용자/기존 소유자·기존 ACL은 보존.
+  이 ACL의 의도된 원복 명령은 `/bin/chmod -a 'user:godieorbuild deny list,search' /Users/dojoohwan`이며 실제 원복하지 않았다.
+- 인증은 단일 실행으로 종료·비밀 파일 폐기. ACL 적용 후 실제 UID502 재접근 검사는 아직 미실행이다.
+- 다음: UID502로 개인 HOME/원본 거부와 snapshot 허용 재확인, 해당 UID 소유 Darwin T만 허용할 진단 프로필/단일 run 잠금 준비, Foundation 비교→제한 Xcode 빌드. P5 해결은 여전히 별도.
+- 계정 생성·UID502 기초검사 완료, 실제 격리/제한 빌드는 미완료. 담당 codex-account-10 해제.
+- 제품 코드/API계약/migration/acceptance 승인 상태 변경 없음. Xcode 재빌드·독립 리뷰·통합run 미실행.
+- 문서 변경만 반영했으며 diff --check/export-context --check 확인. 기존 74개 자체검사를 이번 계정 검사로 재실행한 것으로 표현하지 않는다.

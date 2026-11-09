@@ -39,3 +39,12 @@
 
 계정 생성 뒤에도 실제 게이트가 모두 검증되기 전까지 isolation_verified=false,
 P5 open, 통합 PASS 없음으로 유지한다.
+
+## 실제 확인된 다음 단계
+
+UID502에서 사전점검 exit0, 일반 Foundation 저장 성공, 기존 제한 프로필에서 atomic 저장 실패를 확인했다.
+현재 계정 전환은 명령 실행만 수행했으며 GUI 최초 로그인/Xcode 서비스 초기화 성공은 확인하지 않았다.
+검사 당시 UID502에서 기존 개발 HOME/원본 파일이 staff 그룹 때문에 읽혔다.
+개발 HOME에 `user:godieorbuild deny list,search` ACL을 선두에 추가했으며, 적용 후 실제 UID502
+재검사가 필요하다. 권한을 넓혀 원본을 공유하지 않는다. 전용 UID의 Darwin T 허용·run 잠금·
+Xcode 성공·P5 수명 경계는 아직 구현/검증 완료가 아니다. 원본 기록은 작업 카드 참조.
