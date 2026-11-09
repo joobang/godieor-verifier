@@ -29,6 +29,7 @@ macOS sandbox-exec 기본거부 프로필에서 빌드/임시 HOME만 쓰기, sn
 
 전용 실행 사용자/VM의 권한·수명 요구사항과 실패 재현 게이트는 [runner-isolation.md](runner-isolation.md)를 따른다. 전용 UID 분리만으로 `setsid` 후손이 제거되는 것은 아니다.
 전용 사용자 사전점검 도구 `scripts/check-isolated-ios-host`는 실행 환경의 기초 조건만 점검하며 검사 성공만으로 빌드·격리 성공을 선언하지 않는다.
+Foundation 원자적 쓰기를 비교하는 최소 재현 도구 `scripts/probe-foundation-atomic`도 제공한다. 일반 실행 성공과 sandbox 내부 결과를 구분한다.
 
 ## 실행·결과
 

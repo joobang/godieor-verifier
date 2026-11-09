@@ -30,6 +30,13 @@ Xcode 자체의 `xcodebuild`/`xcrun`/`swbuild`가 전용 사용자의 실제 Dar
 계정을 만들거나 UID를 변경하지 않으며 Foundation/Xcode·후손 수명·원본 접근 차단은 검사하지 않는다.
 기존 사용자 UID로 실행했을 때는 같은 UID/HOME이므로 거부되는 것이 정상이다.
 
+원자적 쓰기 최소 재현은 `./scripts/probe-foundation-atomic /private/tmp/NEW-PROBE-DIR`로
+실행한다. 미리 존재하지 않는 디렉터리여야 하며 도구가 작은 Objective-C/Foundation
+프로그램을 해당 경로에 컴파일하고 합성 plist 두 개를 쓴다. stdout에는 `non_atomic`,
+`atomic`의 각 성공 여부가 JSON으로 출력되며 둘 다 성공해야 exit0, 쓰기 실패는 exit2다.
+일반 실행은 OS 기본 권한만 확인한다. **같은 바이너리를 실제 제품 제한 sandbox에서 실행한
+결과**와 구분하여 기록해야 하며 이 도구가 격리 여부를 판정하지는 않는다.
+
 1. **계정/파일 경계:** 호출 사용자 UID와 실행 UID가 다르고, 호출자 HOME·원본 checkout·비밀 canary 읽기/쓰기는 거부되며 고정 snapshot은 읽기만, run build/전용 tmp만 쓰기 가능해야 한다. 가능하면 실행 계정에서 Docker socket 및 외부 네트워크 거부를 확인한다.
 2. **Foundation/Xcode:** 전용 UID에서 `atomically:YES` 저장·Xcode generic Simulator 빌드 exit0를 실제 재현한다. `xcrun_db`, `DerivedData/info.plist`, `swbuild.tmp.*`가 쓰인 물리 경로와 프로필 권한을 기록한다. stdout 성공 메시지만으로 판정하지 않는다.
 3. **수명:** 정상 완료·timeout·강제종료 각 경우에 단순 자식과 `setsid` 분리 자식/손자가 살아남지 않음을 재현한다. 호스트 재부팅/서비스 crash 이후 유실 run 청소 절차도 확인한다.
