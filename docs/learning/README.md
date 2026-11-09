@@ -30,6 +30,7 @@
 | [LEARN-0006](entries/0006-local-pipeline.md) | 로컬 가상 제공처 파이프라인과 실제 출처의 근거 분리 | 초기 구현 | 작성자 실행, 독립 검증/실제 연동 전 |
 | [LEARN-0007](entries/0007-ott-source-evidence.md) | OTT 공식 공지·RSS와 최초 공개일 근거의 차이 | 실제 출처 조사 | 작성자 공개 접근 확인, 제품 연동/독립 검증 전 |
 | [LEARN-0008](entries/0008-ott-candidate-gates.md) | OTT 공지 후보와 정확한 날짜 검토 분리 | 로컬 수집 구현 | 작성자 17검사·RSS 실행, 제품 publish/독립 검증 전 |
+| [LEARN-0009](entries/0009-nest-layer-boundaries.md) | Nest 기능 모듈과 계층 책임 수정 | 실제 구조 결함 해결 | 작성자 28검사·임시 DB/API 호환, 고정 코드 리뷰 추가 지적 없음 보고 |
 
 ## 가볍게 유지하는 방법
 
