@@ -56,3 +56,5 @@
 빈 기록은 [학습 템플릿](templates/learning-entry.md), 기술 결정은 [ADR 템플릿](https://github.com/joobang/godieor-app/blob/dev/docs/decisions/template.md),
 개발 작업은 [작업 카드](https://github.com/joobang/godieor-app/blob/dev/docs/ai/task-template.md)를 사용한다.
 현재는 Markdown과 Git으로 운영하며 검색 서비스·RAG·별도 카탈로그 앱은 만들지 않는다.
+
+- [LEARN-0012 상세 최신값과 요청 소유권](entries/0012-detail-and-request-revision.md) — 작성자 해설 초안, 정적 발견과 UI 점검 구분.
