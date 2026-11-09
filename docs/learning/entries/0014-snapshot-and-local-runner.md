@@ -13,3 +13,5 @@ SHA 문자열만 지정해도 Git replace ref나 로컬 export속성이 추출 �
 후속 재현(2026-11-09): Foundation `NSDictionary writeToFile:atomically:NO` 및 일반 `NSData writeToURL`은 제한된 build HOME에 정상 저장됐지만, `atomically:YES`와 `NSDictionary writeToURL:error:`는 동일 경로에서 EPERM이었다. macOS 사용자 임시 폴더의 물리 경로 `/private/var/folders/.../T`를 별도로 허용하면 두 atomic 쓰기가 성공했고, `C`만 허용하면 실패했다. 이는 기존 `/var/folders` 별칭만 허용한 시도와 달리 실제 물리 경로를 비교한 결과다. Xcode도 `DerivedData` 초기 오류 없이 빌드 단계로 진입했지만 `swbuild.tmp.*` 및 링커 문제로 exit65였다. 사용자 공용 T 폴더 전체를 허용하면 격리 목표가 약화되므로 코드에 반영하지 않았다. 외부의 지정된 실행 사용자 환경은 후속 설계 과제이며 아직 안전성을 입증하지 않았다.
 
 후속 설계(코드/환경 미적용): `docs/runner-isolation.md`에 전용 실행 UID의 비밀·Darwin 임시 디렉터리 경계, run 단독 실행, 서비스 종료·VM 폐기에 따른 `setsid` 후손 수명 검증 조건을 적었다. 전용 사용자 격리는 파일 접근 면을 줄이는 제안이며 프로세스 트리 전체 종료의 증거는 아니다. 가상 probe/실제 Xcode 재실행·후손 장애 주입은 추후 별도 기록한다.
+
+추가 사전점검 구현: `scripts/check-isolated-ios-host`가 OS 계정 기준 UID/HOME 및 Darwin T의 물리 경로·소유·접근 모드를 확인한다. 실제 사용자 UID 501에서는 `same_uid_as_caller`/`home_overlaps_caller_home`로 거부됐으며 전용 사용자 합격 사례는 아직 없다. 모의 조건 4개 검사는 자기검사이고 실제 OS 격리 검증이 아니다. 결과는 항상 `isolation_verified=false`로 고정한다.

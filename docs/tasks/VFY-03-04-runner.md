@@ -78,3 +78,10 @@ Node 도구/캐시가 없어졌으면 신뢰하는 Node24와 npm 경로를 새�
 - 기존 `/private/tmp/godieor-xcode-physical-cache.log`에는 `swbuild.tmp.*`의 물리 경로 `/private/var/folders/.../T` EPERM과 xcrun 캐시 오류가 남아 있다. 새로운 Xcode 실행·전용 계정 생성은 하지 않았다.
 - 문서 변경 뒤 `./scripts/self-test.sh` 62개 통과, `git diff --check` 성공. 실행 격리·Xcode 문제를 해결했다는 의미는 아니다.
 - 다음: 전용 실행 ID의 최소 환경 마련 후 Foundation probe→제한 iOS 빌드→`setsid` timeout/강제종료 시나리오를 실제 검사. 어떤 방식도 아직 구현된 격리로 간주하지 않으며 `isolation_verified=false`, 기존 iOS exit65, P5 open 및 통합 PASS 없음 유지.
+
+### 2026-11-09 전용 사용자 사전점검기 (codex-isolation-05)
+
+- 시작: verifier `7e13407` / `codex/vfy-03-runner`, app `7c868d9` / `codex/app-01-review-fixes`, 작업 트리 clean. 요구사항 VFY-03/04, GD-001~010 초안, LEARN-0014.
+- 변경: `scripts/check-isolated-ios-host`, `src/godieor_verifier/isolated_host.py`, 모의 환경 4개 검사. 실효 UID, OS 계정 HOME 및 물리 Darwin T의 소유권/접근 모드 사전 확인. 예상 실패: 개발 사용자와 UID/HOME 공유, 공유 T 디렉터리, root 실행, 임시 디렉터리 부재. 결과에는 항상 격리 미검증을 표시한다.
+- 현재 UID 501에서 `--caller-uid 501 --caller-home /Users/dojoohwan` 실행: exit2, `same_uid_as_caller`, `home_overlaps_caller_home`; 물리 T 경로 관찰. 전용 macOS 계정 생성/전환이나 Xcode 재실행은 하지 않았다.
+- `./scripts/self-test.sh`: 66개 통과. 문서/도구만으로 P5 종료·iOS 빌드·격리 PASS 없음. 전용 계정의 실환경 점검과 서비스 수명 검사가 후속이다.
