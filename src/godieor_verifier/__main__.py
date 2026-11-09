@@ -24,10 +24,12 @@ def main():
     parser.add_argument("--acceptance", type=Path, required=True)
     parser.add_argument("--evidence", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--require-schema-version", type=int, choices=(1, 2), default=1,
+                        help="통합 실행은 2로 지정하여 앱 전용 v1 입력을 거부")
     args = parser.parse_args()
     try:
         acceptance_bytes, evidence_bytes = args.acceptance.read_bytes(), args.evidence.read_bytes()
-        result = report(acceptance_bytes, evidence_bytes)
+        result = report(acceptance_bytes, evidence_bytes, args.require_schema_version)
         json_output = json.dumps(result, ensure_ascii=False, indent=2) + "\n"
         markdown_output = markdown(result)
         args.out.mkdir(parents=True, exist_ok=True)

@@ -3,7 +3,7 @@
 [godieor-app](https://github.com/joobang/godieor-app)과
 [godieor-backend](https://github.com/joobang/godieor-backend)의 독립 검증을 담당하는 저장소.
 초기 구현은 **acceptance 초안 + AI 리뷰 계약 + 결정적 판정 엔진 + 엔진 자기 검사**다.
-현재 런타임은 앱 전용 evidence v1이다. backend/계약/DB 조합 검증은 아직 구현하지 않았다.
+현재 런타임은 앱 전용 evidence v1과 전체 대상 조합 바인딩 evidence v2를 지원한다. 실제 backend/계약/DB 실행 검증 runner는 아직 구현하지 않았다.
 외부 패키지·AI API·클라우드 DB 없이 Python 3.9 이상으로 실행한다.
 verifier는 최종 구성에서도 Mac에서 필요할 때 실행한다. 제품 API/DB의 클라우드 운영과 별개다.
 
@@ -41,3 +41,5 @@ verifier는 최종 구성에서도 Mac에서 필요할 때 실행한다. 제품 
 자동 Git snapshot·build/test runner·AI 호출 어댑터·OS 격리는 아직 없다.
 판정 엔진은 **신뢰할 수 있는 실행기가 생성한 evidence**를 전제로 한다. 손으로 작성한 PASS나
 `isolation_verified: true`는 실제 실행·격리의 증명이 아니다. 실행기를 완성하기 전 제품 승인에 사용하지 않는다.
+
+- [Evidence v2 형식과 한계](docs/evidence-v2.md) · [VFY-01 관찰점 제안](requirements/proposals/vfy-01-observation-map.md)
