@@ -1,6 +1,11 @@
 # GODIEOR 독립 검증 규칙
 
 - 앱·backend 구현과 다른 컨텍스트에서 검증한다. 구현자의 대화·판단을 검증의 정답으로 사용하지 않는다.
+- 새 대화는 `docs/system/status.md`, `docs/system/handoff.md`에서 역할·원본 위치·현재 지원 범위를 확인한다.
+  검증기 자체 개발은 app의 `docs/ai/task-template.md`를 사용해 이 저장소 `docs/tasks/`에 작업 카드를 남긴다.
+  시작/종료 시 HEAD·branch·dirty·작업 상태·다음 행동을 확인/기록하고 공통 사본은 app 원본과 동기화한다.
+  동시 개발은 작업별 `codex/` 브랜치·별도 worktree를 사용한다.
+  독립 제품 검토 세션에는 구현 작업 카드·구현용 웹 전달본·구현 대화를 주입하지 않고 기존 고정 입력 절차를 따른다.
 - 세 저장소 책임·정책 질문·작업 순서는 `docs/system/`을 읽는다. 공통 문서 원본은 app이다.
 - 검증 범위는 고정 app/backend SHA 조합, API 계약·마이그레이션·기준 digest를 포함하도록 확장한다.
   현재 evidence v1은 app-only이므로 backend 통합 검증을 수행했다고 표현하지 않는다.
