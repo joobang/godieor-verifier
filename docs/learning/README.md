@@ -32,6 +32,9 @@
 | [LEARN-0008](entries/0008-ott-candidate-gates.md) | OTT 공지 후보와 정확한 날짜 검토 분리 | 로컬 수집 구현 | 작성자 17검사·RSS 실행, 제품 publish/독립 검증 전 |
 | [LEARN-0009](entries/0009-nest-layer-boundaries.md) | Nest 기능 모듈과 계층 책임 수정 | 실제 구조 결함 해결 | 작성자 28검사·임시 DB/API 호환, 고정 코드 리뷰 추가 지적 없음 보고 |
 
+| [LEARN-0010](entries/0010-prisma-client-and-sql.md) | Prisma Client 우선과 SQL 예외·타입 보장 | 쿼리 개선/예방 설계 | 자체33개·임시DB 회귀·고정 코드 리뷰 |
+| [LEARN-0011](entries/0011-reviewed-candidates-to-events.md) | 검토 공지에서 안정 이벤트로 수동 반영 | 제품 연결/예방 설계 | 전체47개·임시DB·로컬4건 조회, 독립 통합 검증 전 |
+
 ## 가볍게 유지하는 방법
 
 - 기술 선택이나 비슷한 문제가 반복될 때 기록한다. 단순 오타 수정마다 새 글을 만들지 않는다.

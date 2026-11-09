@@ -31,3 +31,5 @@ v1 후보/이력 보존 변환과 손상 상태의 export 보존을 구현하고
 BE-03 후속: 후보 core/IO/CLI를 ott-candidates 기능 모듈과 Service/Repository/Client로 옮겼다.
 기존 17개 규칙 검사를 유지하고 DB-free DI/CLI 검사를 추가했다. 최신 구조·검사 범위는 LEARN-0009/BE-03 원본을 따른다.
 기존 코드 리뷰는 당시 고정 SHA의 이력이며 새 구조 전체를 승인한 기록이 아니다.
+
+후속 DATA-02B에서 고정 키 기반 수동 publish를 연결했다. 당시 후보 전용이라는 실행 사실은 보존하며 현재 상태/한계는 LEARN-0011과 backend/docs/reviewed-publish.md를 참조한다.
