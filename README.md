@@ -38,8 +38,10 @@ verifier는 최종 구성에서도 Mac에서 필요할 때 실행한다. 제품 
 - [초기 구성 검사 결과](docs/bootstrap-validation.md)
 - [통합 학습 카탈로그](docs/learning/README.md)
 
-자동 Git snapshot·build/test runner·AI 호출 어댑터·OS 격리는 아직 없다.
+고정 Git object snapshot과 로컬 build/test runner 초기 구현이 있다. AI 호출 어댑터·완전한 OS/후손 수명 격리·전체 승인 검사는 아직 없다.
 판정 엔진은 **신뢰할 수 있는 실행기가 생성한 evidence**를 전제로 한다. 손으로 작성한 PASS나
 `isolation_verified: true`는 실제 실행·격리의 증명이 아니다. 실행기를 완성하기 전 제품 승인에 사용하지 않는다.
 
 - [Evidence v2 형식과 한계](docs/evidence-v2.md) · [VFY-01 관찰점 제안](requirements/proposals/vfy-01-observation-map.md)
+
+- [로컬 snapshot·실행기와 미해결 격리 한계](docs/runner.md) — VFY-03/04 초기 구현, 완전 통합 suite/AI 어댑터 아님.

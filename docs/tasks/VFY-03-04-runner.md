@@ -1,0 +1,54 @@
+# VFY-03/04 · 고정 snapshot과 실행기
+- 상태: 사용자 요청으로 구현 중단·인계 대기. 담당 codex-runner-01 해제. 초기 구현/부분 실행이며 전체 완료 아님.
+- 기준: verifier ea96c2f, app f662344, backend89a6b48. 요구사항 VFY-03/04, GD-001~010 초안.
+- 범위: 안전한 Git archive 추출/별도 build 사본/파일 manifest, 최소환경·timeout·로그 수집, 일회용DB 수명, evidence v2+최소schema2 집계.
+- 실패 사례: symlink/경로탈출/submodule/LFS, dirty 원본 혼입, timeout·누락 검사·리뷰대기, 원본/비밀 접근, 정리 실패.
+- LEARN-ID: LEARN-0014 예정. 승인 기준 수정·통합PASS 선언 없음.
+
+## 진행 기록
+- raw Git tree/blob 추출로 전환. 독립 리뷰에서 Git fsmonitor 실행·replace ref/로컬 export속성·대소문자충돌·누락object remote helper 실행을 가상 marker로 재현했고 설정/환경·transport차단·원시blob추출로 수정. 회귀62개 통과.
+- Docker run 응답 timeout 시에도 고유 이름으로 정리 시도하도록 수정. 최초processgroup만 정리하므로 setsid 후손 수명 전체격리는 미완료. VFY-03 전체완료나 제품PASS로 표시하지 않는다.
+- 실제 macOS sandbox: 최소profile 기동실패(-6) 진단 후 루트디렉터리 자체읽기 literal권한으로 기동 성공. 원본읽기거부·snapshot쓰기거부·snapshot읽기/임시HOME쓰기 허용 probe 통과.
+- 실제 고정source에서 dependency 설치 성공. offline캐시부족→별도빈 npm설정파일 적용→Prisma generate의 DATABASE_URL 누락→생성전용 dummyURL→엔진다운로드 필요를 순차 진단. bootstrap(의존성/Prisma생성)만 외부망, 실제DBsecret 미전달. 생성 이후는 loopback 제한.
+- 실행 결과는 /private/tmp/godieor-vfy-run-*의 source/build/steps/logs/evidence/report에 보존. 실행 중 최신run 경로는 /private/tmp/godieor-last-run-path 로컬 포인터. 이 임시 포인터는 source나 승인 근거가 아니다.
+
+## 실행 확인과 남은 항목
+- 2026-11-09, /private/tmp/godieor-vfy-run-d630d3c9: Node24.19.0, 경계probe/dependencies/Prisma generate/tsc/backend47tests/migrate/database-smoke 모두 exit0, iOS generic build exit65. 해당 일회용 컨테이너는 종료 후 docker ps에서 남아 있지 않음을 확인했다.
+- shell의 build 사본 mkdir/touch는 동일 sandbox에서 성공하지만 Xcode는 DerivedData 정보 쓰기를 거부당한다. /tmp별칭 추가만으로 해결되지 않았다. 실제 iOS 제한실행 성공으로 표시하지 않는다.
+- 실행된 iOS 실패를 SKIPPED로 숨기지 않도록 save에서 FAIL/ERROR를 실제 단계exit/timeout에 따라 보존했다. 다른 미실행필수검사는 SKIPPED 유지.
+- 독립 reviewer Peirce(01a1bf1e-ad14-7353-9f4c-e3dbcaa85c18, fork_context=false)는 Git보안수정·추가62개검사 및 remotehelper 대조실험을 확인했다. setsid후손수명P5는 미해결, reviewer는 실제sandbox실험을 독립실행하지 않았다.
+- LEARN-0014: docs/learning/entries/0014-snapshot-and-local-runner.md. VFY-03/04는 초기구현/부분실행 상태이며 전체완료가 아니다. 다음 우선순위는 제한 Xcode 빌드와 후손수명격리 해결 후 전체실행·AI입출력어댑터/필수검사연결이다.
+
+
+## 다음 계정 인계 · 2026-11-09 KST
+
+사용자가 토큰 부족으로 이 지점에서 중단·문서정리·다른 계정 인계를 요청했다. 새 기능 작업은 시작하지 않는다.
+
+- 구현 파일: src/godieor_verifier/{snapshot.py,runner.py,database-smoke.cjs}, scripts/runner, tests/test_runner.py. 사용법 docs/runner.md.
+- verifier 브랜치 codex/vfy-03-runner, 제품 app 브랜치 codex/app-01-review-fixes, backend dev. 인계 최종 SHA는 Git HEAD와 웹 전달본에서 확인. 이 작업 전 verifier ea96c2f, app f662344, backend89a6b48.
+- 최종 실제 실행: /private/tmp/godieor-vfy-run-391f70fd. 요약/로그 사본은 verifier work/handoff/godieor-vfy-run-391f70fd (Git 제외). 원본 evidence는 verifier ea96c2f + dirty/state digest로 기록된 당시 결과이며 새 커밋의 결과로 재라벨하지 않는다. snapshot/build 원본은 /private/tmp에만 있으며 지워지면 새 run 필요.
+- 마지막 명령 scripts/self-test.sh: 62개 성공. backend 고정사본47개 자체검사 및 일회용 DB migration/반복수집/달력·상세 smoke 성공. source read허용·원본read거부·sourcewrite거부·HOMEwrite허용 probe 성공. 마지막 컨테이너 docker ps name=godieor-vfy- 결과 없음.
+- iOS 제한빌드 exit65. shell mkdir/touch는 build 사본에서 성공했지만 Xcode의 DerivedData/info.plist 및 LogStoreManifest 쓰기는 EPERM. /tmp·/private/tmp 별칭, CFFIXED_USER_HOME, clangcache 경로 조정만으로 해결 안 됨. sandbox를 무조건 풀어 성공으로 대체하지 말고 Xcode 프로세스/XPC/파일권한 원인을 좁힌다.
+- 독립리뷰 P5 미해결: setsid로 새 세션을 만든 후손은 최초 process group 정리를 벗어난다. timeout은 최초group만 보장. 전용 실행 서비스/컨테이너/사용자 등 수명격리 설계 필요. isolation_verified=false 유지.
+- 그 밖의 미완료: 자동 AI review 어댑터, 모든 acceptance check별 독립 검사 연결, 전체 통합 실행/승인. 기본 준비모드/부분실행은 SKIPPED로 ERROR가 정상. 실패한 iOS는 FAIL 기록 유지. acceptance 원본/승인 상태 그대로.
+- reviewer Peirce 최종 추가 실행코드 지적 없음(위 P5 여전히 open). 초기 P1 Git fsmonitor/replace/attributes/missingobject helper·경로충돌 및 DB timeout 정리 지적을 수정했고 reviewer는 62개검사·remotehelper 대조실험까지 확인했다. 실제 sandbox/build/DB는 작성자 실행이며 reviewer 독립실행 아님.
+
+### 다음 작업 순서
+
+1. AGENTS → docs/system/status.md → handoff.md → 본 카드 → docs/runner.md. 세 저장소 HEAD/branch/dirty를 확인하고 다른 세션의 동시 수정이 없는지 확인한다.
+2. work/handoff/.../steps.json·report.json·logs/ios-build.log를 읽는다. VFY-03/04 전체 완료/제품 PASS로 오해하지 않는다.
+3. 우선 Xcode 제한빌드 EPERM 원인을 좁힌다. 새 outfile을 사용해 재실행하고 기존 evidence를 덮어쓰지 않는다. 후손수명격리를 해결할 수 없다면 open finding으로 유지하고 신뢰할 수 없는 임의 코드 실행에 사용하지 않는다.
+4. 의미 있는 코드 변경 후 자기검사·분리 컨텍스트 리뷰, 실제 실패 경로 재현, 카드·공통사본·학습기록 업데이트. 승인 기준은 임의로 승인하지 않는다.
+
+재실행 예시(40자리 SHA는 원본 run의 evidence.json 또는 새로 확정한 조합을 사용):
+
+```sh
+./scripts/runner --app /Users/dojoohwan/workspace/godieor-app --app-base APP_BASE_SHA40 --app-head APP_HEAD_SHA40 \
+  --backend /Users/dojoohwan/workspace/godieor-backend --backend-base BE_BASE_SHA40 --backend-head BE_HEAD_SHA40 \
+  --acceptance requirements/acceptance.yaml --out /private/tmp/godieor-FRESH-RUN \
+  --execute --fetch-dependencies \
+  --node /private/tmp/godieor-npm-cache/_npx/09ae5d3560c7b1f2/node_modules/node/bin/node \
+  --npm-cli /opt/homebrew/lib/node_modules/npm/bin/npm-cli.js --npm-cache /private/tmp/godieor-npm-cache
+```
+
+Node 도구/캐시가 없어졌으면 신뢰하는 Node24와 npm 경로를 새로 정하고 버전을 기록한다. 외부망은 준비 단계만 허용되며 실제 DB credential은 이후 일회용DB 단계에서만 주입한다. LEARN-0014에 실제 발견/가상회귀/미해결 격리를 구분해 남겼다.

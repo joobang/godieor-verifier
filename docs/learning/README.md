@@ -60,3 +60,5 @@
 - [LEARN-0012 상세 최신값과 요청 소유권](entries/0012-detail-and-request-revision.md) — 작성자 해설 초안, 정적 발견과 UI 점검 구분.
 
 - [LEARN-0013 증거 대상 조합 바인딩](entries/0013-evidence-subject-binding.md) — 검증기 개발자 해설 초안, 증거 진위와 입력 일관성 구분.
+
+- [LEARN-0014 고정 소스와 실제 실행의 경계](entries/0014-snapshot-and-local-runner.md) — 작성자 해설 초안, Git 실행 함정·부분 sandbox 확인·미해결 후손 수명 구분.
