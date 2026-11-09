@@ -28,6 +28,7 @@ macOS sandbox-exec 기본거부 프로필에서 빌드/임시 HOME만 쓰기, sn
 **iOS 제한 빌드 현황(2026-11-09):** macOS Foundation의 atomic plist 쓰기는 `TMPDIR`을 별도 HOME으로 설정해도 사용자별 Darwin 임시 디렉터리의 실제 경로 `/private/var/folders/.../T`에 쓰기 권한이 없으면 EPERM이 발생한다. 같은 경로를 진단용으로 허용하면 `DerivedData/info.plist`·`LogStoreManifest.plist` 오류가 사라지고 Xcode 컴파일/링크까지 진행하지만 이후 `swbuild.tmp.*` 오류 등으로 exit65가 계속된다. 이 사용자 공유 T 디렉터리를 runner sandbox에 허용하면 다른 작업의 임시 파일까지 접근할 수 있으므로 정식 프로필에서는 허용하지 않는다. 실제 보안 경계를 보존하려면 별도 사용자/격리된 환경에서 Xcode를 실행하는 방안을 먼저 검토해야 한다. 해당 방법은 아직 구현·검증되지 않았다.
 
 전용 실행 사용자/VM의 권한·수명 요구사항과 실패 재현 게이트는 [runner-isolation.md](runner-isolation.md)를 따른다. 전용 UID 분리만으로 `setsid` 후손이 제거되는 것은 아니다.
+전용 사용자 사전점검 도구 `scripts/check-isolated-ios-host`는 실행 환경의 기초 조건만 점검하며 검사 성공만으로 빌드·격리 성공을 선언하지 않는다.
 
 ## 실행·결과
 

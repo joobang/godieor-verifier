@@ -22,6 +22,14 @@ Xcode 자체의 `xcodebuild`/`xcrun`/`swbuild`가 전용 사용자의 실제 Dar
 
 ## 승격을 위한 검증 게이트
 
+전용 사용자를 마련한 뒤 **그 사용자 세션 안에서** 사전 조건을 확인할 수 있도록
+`scripts/check-isolated-ios-host --caller-uid <기존 UID> --caller-home <기존 HOME>`를 제공한다.
+이 명령은 읽기 전용이며 실행자의 실효 UID, 시스템 계정 HOME, Darwin 임시 경로의
+물리 위치·소유자·권한을 점검한다. 조건을 충족하지 않으면 exit2,
+사전 점검만 통과하면 exit0을 반환한다. 어느 결과에서도 `isolation_verified=false`다.
+계정을 만들거나 UID를 변경하지 않으며 Foundation/Xcode·후손 수명·원본 접근 차단은 검사하지 않는다.
+기존 사용자 UID로 실행했을 때는 같은 UID/HOME이므로 거부되는 것이 정상이다.
+
 1. **계정/파일 경계:** 호출 사용자 UID와 실행 UID가 다르고, 호출자 HOME·원본 checkout·비밀 canary 읽기/쓰기는 거부되며 고정 snapshot은 읽기만, run build/전용 tmp만 쓰기 가능해야 한다. 가능하면 실행 계정에서 Docker socket 및 외부 네트워크 거부를 확인한다.
 2. **Foundation/Xcode:** 전용 UID에서 `atomically:YES` 저장·Xcode generic Simulator 빌드 exit0를 실제 재현한다. `xcrun_db`, `DerivedData/info.plist`, `swbuild.tmp.*`가 쓰인 물리 경로와 프로필 권한을 기록한다. stdout 성공 메시지만으로 판정하지 않는다.
 3. **수명:** 정상 완료·timeout·강제종료 각 경우에 단순 자식과 `setsid` 분리 자식/손자가 살아남지 않음을 재현한다. 호스트 재부팅/서비스 crash 이후 유실 run 청소 절차도 확인한다.

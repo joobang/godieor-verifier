@@ -1,0 +1,4 @@
+#!/bin/sh
+set -eu
+repo_dir=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+PYTHONPATH="$repo_dir/src" exec python3 -m godieor_verifier.isolated_host "$@"
