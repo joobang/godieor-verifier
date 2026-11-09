@@ -85,3 +85,12 @@ Node 도구/캐시가 없어졌으면 신뢰하는 Node24와 npm 경로를 새�
 - 변경: `scripts/check-isolated-ios-host`, `src/godieor_verifier/isolated_host.py`, 모의 환경 4개 검사. 실효 UID, OS 계정 HOME 및 물리 Darwin T의 소유권/접근 모드 사전 확인. 예상 실패: 개발 사용자와 UID/HOME 공유, 공유 T 디렉터리, root 실행, 임시 디렉터리 부재. 결과에는 항상 격리 미검증을 표시한다.
 - 현재 UID 501에서 `--caller-uid 501 --caller-home /Users/dojoohwan` 실행: exit2, `same_uid_as_caller`, `home_overlaps_caller_home`; 물리 T 경로 관찰. 전용 macOS 계정 생성/전환이나 Xcode 재실행은 하지 않았다.
 - `./scripts/self-test.sh`: 66개 통과. 문서/도구만으로 P5 종료·iOS 빌드·격리 PASS 없음. 전용 계정의 실환경 점검과 서비스 수명 검사가 후속이다.
+
+### 2026-11-09 Foundation 재현 도구 (codex-isolation-06)
+
+- 시작: verifier `7412e2b` / `codex/vfy-03-runner`, app `7c868d9` / `codex/app-01-review-fixes`, backend `2a9d06f` / `dev` 모두 clean. VFY-03/04, GD-001~010 초안, LEARN-0014. 범위는 전용 UID에서 재사용할 atomic plist 최소 재현 도구다.
+- 추가: `scripts/foundation-atomic-probe.m`, `scripts/probe-foundation-atomic`. 고유 신규 출력 폴더에 합성 plist만 작성한다. 예상 실패는 Xcode 툴체인 접근 거부, sandbox 안의 임시 파일 생성 EPERM, 혹은 Foundation 비원자적/원자적 저장의 차이다.
+- 현재 UID 501에서 `/private/tmp/godieor-foundation-probe-20261109-06` 일반 실행: `non_atomic=true`, `atomic=true`, exit0. 이 결과는 OS 격리 없이 실행한 기초 작동 확인이다.
+- 동일 빌드 바이너리와 기존 runner 제한 프로필을 Codex 현재 sandbox 안에서 중첩 실행하면 `sandbox-exec: sandbox_apply: Operation not permitted`, exit71. Foundation 쓰기 결과는 관찰되지 않았다. 기존 승인된 제한 환경에서 과거 재현한 atomic EPERM을 이번 중첩 오류로 대체하거나 성공 처리하지 않는다.
+- 검증: `./scripts/self-test.sh` 66개 통과, `git diff --check` 통과. 이 검사는 전용 UID 격리나 iOS sandbox 빌드 성공을 의미하지 않는다.
+- 다음: 별도 UID/허가된 격리 실행 컨텍스트에서 동일 프로브 비교·실제 Xcode 빌드 및 P5 수명 검증. 격리 검증 false/통합 PASS 없음 유지.

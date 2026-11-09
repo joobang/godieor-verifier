@@ -15,3 +15,5 @@ SHA 문자열만 지정해도 Git replace ref나 로컬 export속성이 추출 �
 후속 설계(코드/환경 미적용): `docs/runner-isolation.md`에 전용 실행 UID의 비밀·Darwin 임시 디렉터리 경계, run 단독 실행, 서비스 종료·VM 폐기에 따른 `setsid` 후손 수명 검증 조건을 적었다. 전용 사용자 격리는 파일 접근 면을 줄이는 제안이며 프로세스 트리 전체 종료의 증거는 아니다. 가상 probe/실제 Xcode 재실행·후손 장애 주입은 추후 별도 기록한다.
 
 추가 사전점검 구현: `scripts/check-isolated-ios-host`가 OS 계정 기준 UID/HOME 및 Darwin T의 물리 경로·소유·접근 모드를 확인한다. 실제 사용자 UID 501에서는 `same_uid_as_caller`/`home_overlaps_caller_home`로 거부됐으며 전용 사용자 합격 사례는 아직 없다. 모의 조건 4개 검사는 자기검사이고 실제 OS 격리 검증이 아니다. 결과는 항상 `isolation_verified=false`로 고정한다.
+
+동일 원인에 대한 재현성 보강: Objective-C/Foundation 합성 plist probe를 저장소에 추가했다. 같은 Mac UID 501의 일반 실행에서 비원자적/원자적 쓰기가 모두 성공했으며, Codex의 기존 sandbox 안에 runner `sandbox-exec`을 중첩했을 때는 `sandbox_apply: Operation not permitted`(71)로 프로그램 실행 전에 거부됐다. 이 두 결과는 과거 제한 실행에서 관찰한 atomic EPERM을 반증하지 않는다. 별도 실행 ID의 제한된 환경에서 다시 비교해야 한다.

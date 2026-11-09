@@ -1,0 +1,18 @@
+#!/bin/sh
+# Compile a tiny, synthetic Foundation write probe into the caller's temporary output.
+# This does not establish any isolation or modify host accounts.
+set -eu
+if [ "$#" -ne 1 ]; then
+    echo 'usage: probe-foundation-atomic NEW_OUTPUT_DIRECTORY' >&2
+    exit 64
+fi
+repo_dir=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+out=$1
+if [ -e "$out" ]; then
+    echo 'output directory already exists' >&2
+    exit 64
+fi
+mkdir -m 700 -- "$out"
+/usr/bin/clang -fobjc-arc -framework Foundation \
+    "$repo_dir/scripts/foundation-atomic-probe.m" -o "$out/probe"
+"$out/probe" "$out"
