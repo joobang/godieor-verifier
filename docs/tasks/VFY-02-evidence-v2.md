@@ -1,5 +1,5 @@
 # VFY-01/02 · 관찰점과 evidence v2
-- 상태: 진행. 담당 codex-verifier-v2.
+- 상태: 관찰점 제안·v2 구현·자기검사·독립 정적 재검토 완료. 담당 해제.
 - 요구사항: VFY-01/02, GD-001~010 초안. 승인 기준 원본 변경 없음.
 - 기준: verifier da31fa2, app cdd8532, backend f051b95. 별도 verifier 브랜치에서 순차 작업.
 - 범위: 앱/백엔드/계약/migration/기준/verifier 조합 바인딩, v1 호환·downgrade 거부, parser/회귀 검사·가상 예제·문서.
@@ -19,3 +19,5 @@
 - 추가 회귀 및 CLI 검사를 포함해 scripts/self-test.sh 최종48개 통과. 가상v2+최소schema2 CLI는 exit2 REVIEW_REQUIRED.
 - acceptance SHA256 c4906283810c8b378800b67930028685a41b6a051923ea9f9415346b2d657063 유지. 승인 상태·필수 검사 변경 없음.
 - LEARN-0013: docs/learning/entries/0013-evidence-subject-binding.md.
+
+최종 코드 d15601e2911885daf09ea07672c9b9c6edbadad1. 별도 reviewer는 수정 뒤48개 검사와 API/CLI 재현, 추가 지적 없음 보고. 다음 VFY-03 snapshot/build 사본·일회용 DB 및 VFY-04 runner. 통합PASS 없음.
