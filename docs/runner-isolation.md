@@ -71,3 +71,33 @@ cleanup_verified=false다. 기존 출력은 재사용하지 않는다. 새 서�
 따라서 `start_new_session`/`killpg`만으로 P5를 해결하지 못한다. 로컬
 `man launchd.plist`의 AbandonProcessGroup 설명도 같은 process group 정리만 명시하므로
 기본 launchd job 등록을 전체 후손 종료의 보장으로 제안하지 않는다.
+
+## 전용 UID iOS 진단 실행기 (초기 구현)
+
+`scripts/probe-dedicated-ios`는 기존 `scripts/runner`와 별개인 고정 입력 진단이다.
+전용 UID에서 다음처럼 실행한다. 경로·SHA는 실제 준비한 고정 사본에 맞춘다.
+
+```sh
+scripts/probe-dedicated-ios --caller-uid 501 --caller-home /Users/dojoohwan \
+  --original-app /Users/dojoohwan/workspace/godieor-app/README.md \
+  --app /Users/Shared/NEW-STAGING/app --manifest /Users/Shared/NEW-STAGING/app-manifest.json \
+  --out /Users/Shared/NEW-STAGING/incoming/NEW-RESULT
+```
+
+OS 계정의 UID/HOME 일치, caller HOME/기존 앱 파일의 실제 PermissionError,
+getconf로 얻은 전용 UID의 물리 Darwin T 소유권/비공유 모드를 확인한다.
+존재하지 않는 경로는 접근 거부 성공으로 취급하지 않는다. 입력 manifest/tree를 다시 대조하고,
+링크·그룹/기타 쓰기·실행 UID가 수정 가능한 입력을 거부한다.
+전용 HOME의 `.godieor-ios-probe.lock`에 비차단 flock을 유지하며 동일 도구의 동시 실행을 거부한다.
+이 잠금은 협조적 진단끼리의 중복 방지이며 임의 동일 UID 코드나 이전 setsid 후손을 격리하지 않는다.
+
+이후 별도 build 사본과 임시 HOME을 만들고, 기존 runner profile에 **확인한 전용 UID의 Darwin T와
+그 별칭만** 읽기/쓰기 허용한다. 개발 UID의 공용 T나 전용 HOME/키체인 전체를 열지 않는다.
+Xcode 버전→Foundation 컴파일/실제 plist 내용 검사→generic Simulator 빌드 순으로 실행한다.
+중간 실패 시 다음 단계를 생략한다. profile·digest·단계별 argv/exit/로그 해시·입력 app SHA를 보존한다.
+결과의 `ios_build_succeeded` 및 CLI exit0은 해당 진단 성공일 뿐이며 모든 결과에서
+isolation_verified=false/cleanup_verified=false다. 기존 runner profile이나 acceptance verdict를 바꾸지 않는다.
+
+P5는 계속 미해결이므로 현재 고정 제품의 진단에만 사용하고 임의 비신뢰 코드 자동 실행 서비스로
+운영하지 않는다. XPC/Mach 접근 허용 등 기존 profile 한계, GUI/Xcode 서비스 초기화와 운영 비밀
+차단 범위, 실제 후손 정리는 별도 검증 대상이다. 전용 계정에는 Apple ID/인증서를 넣지 않는다.
