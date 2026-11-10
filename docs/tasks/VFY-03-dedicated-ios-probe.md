@@ -1,7 +1,7 @@
 # VFY-03/04 · 전용 UID 접근 경계와 제한 iOS 빌드
 
 - requirement VFY-03/04, GD-010 draft. acceptance 승인 상태 변경 없음.
-- 상태 진행, 담당 codex-dedicated-ios-11.
+- 상태 차단, 담당 codex-dedicated-ios-12 → 인계 시 담당 해제.
 - 시작 app95be3b6/backend0ac4522/verifier794ea0d, codex/vfy-dedicated-account-plan, 모두 clean.
 - 작업 브랜치 세 저장소 codex/vfy-dedicated-ios-probe. 단독 순차 수정, 별도 agent 없음.
 - 범위: 전용 UID의 caller HOME 접근 거부·Darwin T 소유권 확인 후 단일 run 잠금을 잡고
@@ -30,3 +30,23 @@
 - 비공개 입력 도구로 테스트 계정 인증 대기. 아직 UID502 검사/프로필 확장/실제 Xcode 빌드 미실행.
 - 코드 자체검사와 실제 실행을 구분한다. 별도 컨텍스트 리뷰·통합run·P5 해결 없음.
 - 다음은 인증 후 run-account-check.sh 실행. 새 run 디렉터리만 사용하며 기존 로그를 덮어쓰지 않는다.
+
+## 실제 실행 시도 · 2026-11-10 09:26 KST
+
+- 재개 기준 app bf8a303 / backend 36c6994 / verifier f547362, 세 저장소
+  codex/vfy-dedicated-ios-probe, 모두 clean. 실행 입력은 기존 app95be3b6/verifier8b85f18 유지.
+- 비공개 일회성 파일로 인증 helper를 두 번 실행했다. 두 번 모두 `su exit: 1`,
+  `Password: su: Sorry`로 계정 전환이 거부됐다. helper 자체 프로세스 종료0과 su 종료1을 구분한다.
+  비밀번호 내용은 기록하지 않았고 helper의 finally에서 두 파일을 삭제했다.
+- 실제 명령: `/usr/bin/python3 /private/tmp/godieor-account-su.py <일회성 비공개 파일>`.
+  진단 wrapper에 진입하지 않아 incoming은 비어 있고 result.json도 없다.
+- 읽기 전용 재확인: dscl의 UID502/HOME/shell 정상, 개발 HOME의
+  `user:godieorbuild deny list,search` ACL 존재. 이것만으로 UID502 접근 거부가 입증되지는 않는다.
+- Foundation/Xcode/ACL 적용 후 UID502 검사는 모두 미실행. 두 번의 인증 거부만으로
+  암호 오류·PAM/계정 정책 중 구체 원인을 단정하지 않는다. 추가 인증 반복은 중단했다.
+- 다음: 사용자가 macOS에서 godieorbuild 계정의 로그인 가능 여부를 확인한 뒤 비공개 인증으로
+  기존 staging/run-account-check.sh를 재개한다. incoming/run이 여전히 없음을 먼저 확인한다.
+  로그인 자체가 실패하면 사용자 측 계정 암호 복구가 선행된다. 관리자 설정/암호 변경은 하지 않았다.
+- 코드 변경 없음으로 자체검사는 재실행하지 않았다(직전 81개 통과는 이전 실행 사실).
+  P5 open, isolation_verified=false/cleanup_verified=false, acceptance draft, 독립 리뷰 대기 유지.
+- LEARN-0014에 인증 실패와 제품 검사 미실행의 구분을 연결했다. 공통 status/handoff 동기화.

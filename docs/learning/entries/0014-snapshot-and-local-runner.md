@@ -29,3 +29,8 @@ SHA 문자열만 지정해도 Git replace ref나 로컬 export속성이 추출 �
 UID502 실제 실행 후속: preflight는 통과했지만 os.access로 개발 HOME/원본 app README의 읽기 가능을 관찰했다. 계정들이 staff 그룹을 공유하므로 UID 차이만으로 파일 경계가 생기지 않는 실제 사례다. 특정 테스트 계정에만 HOME list/search deny ACL을 추가했으며 적용 후 실제 재검사는 남아 있다. 일반 Foundation 저장은 성공, 기존 제한 profile의 atomic 저장은 여전히 실패했다. 계정 준비와 sandbox 허용 목록·전체 후손 수명은 각각 검증해야 한다.
 
 전용 UID 진단 실행기 구현(실환경 실행 전): caller 계정의 실제 HOME 일치·HOME/기존 파일의 PermissionError를 먼저 요구하고, getconf의 물리 Darwin T가 전용 UID 소유/비공유인지 확인한 후 그 T만 추가 허용한다. 고정 snapshot manifest 검증·협조적 단일 run flock·Foundation 내용 검사 후 Xcode 순서로 실행한다. flock은 이전 setsid 후손이나 임의 동일 UID 코드를 격리하는 수단이 아니다. frozen 입력을 copy_build로 복사할 때 루트 쓰기 권한도 복원해야 work/ 생성이 가능하므로 진단기의 private build root를 수정했다. 이 회귀 포함 81개 자체검사 성공, 실제 UID502/Xcode 결과는 아직 없다.
+
+2026-11-10 실제 후속: 비공개 인증을 통한 UID502 실행 시도 두 번이 su exit1로 거부돼
+새 진단은 시작되지 않았다. 계정/ACL 존재의 정적 확인과 해당 UID의 실제 PermissionError 검사는
+다른 근거다. 인증 실패를 Foundation/Xcode 실패나 제품 회귀로 집계하지 않는다.
+구체 인증 원인은 미확정이며 원본 VFY-03-dedicated-ios-probe 카드에 재개 절차를 남겼다.
