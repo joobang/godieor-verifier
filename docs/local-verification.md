@@ -26,6 +26,6 @@
 
 steps.json의 execution_policy는 backend sandboxed/iOS local-reviewed로 구분한다. evidence.execution.tool_versions.ios_execution_policy와 isolation_verified=false도 남긴다. 서명없는빌드 성공은 iPhone 설치/Google로그인/실데이터coverage/모든사용자흐름 통과의 증거가 아니다.
 
-엔진의 기준·필수검사·승인규칙은 낮추지 않았다. 실행한 ios-build만 실제 결과를 check로 연결하고 미실행기준은 SKIPPED, review는 PENDING. 때문에 모든 실행단계가 성공해도 전체report는 ERROR일 수 있다. 단계별 성공과 제품통합PASS를 구분한다. 현재 acceptance draft라 공식 제품승인 없음.
+엔진의 기준·필수검사·승인규칙은 낮추지 않았다. 실행한 ios-build와 INT-01A의 event-identity/time-semantics API component를 실제 결과로 연결한다. 필터는 최신정책/이전초안차이로 성공해도부분관찰 SKIPPED, 미실행기준도 SKIPPED, review는 PENDING. 상세 docs/api-checks.md. 때문에 모든 실행단계가 성공해도 전체report는 ERROR일 수 있다. 단계별 성공과 제품통합PASS를 구분한다. 현재 acceptance draft라 공식 제품승인 없음.
 
 P5(setsid 후손)와 완전OS격리는 이 로컬 개발 검사에서 해결한 것으로 취급하지 않는다. 전용계정 방식으로 돌아가려는 후속과제는 폐기했다. 신뢰하지 않는 외부PR 코드의 무인실행 환경은 별도 범위다. 현재 제품기능/데이터연동 작업은 이 격리과제에 종속되지 않는다.

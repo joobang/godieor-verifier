@@ -168,6 +168,32 @@ def prepare(args):
     return out, e, acceptance
 
 
+def api_check_evidence(item, check_id, evidence):
+    """Bind one actual process result; success also requires its expected receipt."""
+    status = 'ERROR' if item['timeout'] else ('PASS' if item['exit_code']==0 else 'FAIL')
+    if status == 'PASS':
+        try:
+            raw=Path(item['log']).read_bytes().splitlines()[-1]
+            receipt=strict_json(raw)
+            if (set(receipt)!={'schema_version','suite','status','scope','assertions'} or
+                type(receipt['schema_version']) is not int or receipt['schema_version']!=1 or
+                receipt['suite']!=item['id'].removeprefix('api-') or
+                receipt['status']!='PASS' or receipt['scope']!='backend-api-synthetic' or
+                type(receipt['assertions']) is not int or receipt['assertions']<1):
+                status='ERROR'
+        except (ValueError, OSError, IndexError, TypeError, KeyError, RecursionError):
+            status='ERROR'
+    # The current filter policy and the old draft disagree on cross-category scope.
+    # Preserve the observation but never promote a subset to full draft acceptance.
+    if check_id=='filter-intersection' and status=='PASS': status='SKIPPED'
+    return {'id':check_id,'run_id':evidence['run_id'],'app_head_sha':evidence['app']['head_sha'],
+        'acceptance_sha256':evidence['acceptance']['sha256'],'subject_sha256':subject_digest(evidence),
+        'status':status,'command':item['command'],'exit_code':item['exit_code'],
+        'started_at':item['started_at'],'finished_at':item['finished_at'],'evidence':item['log'],
+        'scope':'backend-api-synthetic',
+        'coverage':'current policy observations; draft conflict unresolved' if check_id=='filter-intersection' else 'API component; iOS flow is separate'}
+
+
 def ios_build_command(build):
     """Verifier-owned unsigned recipe; no product shell script is launched."""
     return ['/usr/bin/xcodebuild', '-project', str(build/'ios/GODIEOR.xcodeproj'),
@@ -190,6 +216,9 @@ def run(args):
                 'subject_sha256':binding,'status':'ERROR' if ios['timeout'] else ('PASS' if ios['exit_code']==0 else 'FAIL'),
                 'command':ios['command'],'exit_code':ios['exit_code'],
                 'started_at':ios['started_at'],'finished_at':ios['finished_at'],'evidence':ios['log']})
+        for suite, cid in [('event-identity','event-identity'),('time-semantics','time-semantics'),('api-filter-observations','filter-intersection')]:
+            item=next((s for s in steps if s['id']=='api-'+suite),None)
+            if item: evidence['checks'].append(api_check_evidence(item,cid,evidence))
         for cid in acceptance['required_checks']:
             if not any(c['id']==cid for c in evidence['checks']):
                 evidence['checks'].append({'id':cid,'run_id':evidence['run_id'],
@@ -210,6 +239,7 @@ def run(args):
             shutil.copytree(args.npm_cache.resolve()/'_cacache', cache/'_cacache')
             trusted=out/'trusted';trusted.mkdir()
             shutil.copyfile(Path(__file__).with_name('database-smoke.cjs'),trusted/'database-smoke.cjs')
+            shutil.copyfile(Path(__file__).with_name('api-checks.cjs'),trusted/'api-checks.cjs')
             env={'PATH':str(node.parent)+':/usr/bin:/bin:/usr/sbin:/sbin', 'HOME':str(home),
                  'TMPDIR':str(tmp), 'LANG':'en_US.UTF-8', 'CI':'1',
                  'CFFIXED_USER_HOME':str(home),'XDG_CACHE_HOME':str(home/'cache'),
@@ -263,6 +293,11 @@ def run(args):
                 write_json(out/'database.json',{'container':name,'image':IMAGE,'temporary':True})
                 extra={'DATABASE_URL':url,'CURSOR_SIGNING_KEY':secrets.token_hex(32),'API_HOST':'127.0.0.1'}
                 step('migration',[str(node),'node_modules/prisma/build/index.js','migrate','deploy'],'backend',extra=extra)
+                for suite in ['event-identity','time-semantics','api-filter-observations']:
+                    try:
+                        step('api-'+suite,[str(node),str(trusted/'api-checks.cjs'),suite],'backend',extra=extra)
+                    except RuntimeError:
+                        pass  # Retain each actual failure and continue the other independent observations.
                 step('database-smoke',[str(node),str(trusted/'database-smoke.cjs')],'backend',extra=extra)
 
     except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as exc:

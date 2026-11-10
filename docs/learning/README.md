@@ -64,3 +64,5 @@
 - [LEARN-0014 고정 소스와 실제 실행의 경계](entries/0014-snapshot-and-local-runner.md) — 작성자 해설 초안, Git 실행 함정·부분 sandbox 확인·미해결 후손 수명 구분.
 
 - [LEARN-0015 제품 검증과 실행 환경의 범위](entries/0015-local-validation-scope.md) — 전용 계정 폐기, 로컬 빌드와 격리 검증 구분, 작성자 해설 초안.
+
+- [LEARN-0016 독립 기대값과 API 판정 연결](entries/0016-independent-api-observations.md) — 작성자 해설 초안, API component·필터 부분성공·제품통합 판정 구분.

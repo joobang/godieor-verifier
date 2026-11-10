@@ -9,3 +9,5 @@
 - 실제 ios-build 결과는 PASS/FAIL/ERROR, 미실행필수검사는 SKIPPED. 전체검증·기준승인·리뷰까지 충족했다고 오해하지 않는다.
 
 과거 Foundation atomic쓰기/전용UID/후손수명 진단은 역사적기록이다. 해당인증경로 복구나 계정추가를 다음필수작업으로 제안하지 않는다. source분리/chmod/최소HOME가 OS격리를 보장하지 않는다는 경계는 유지한다. 사용법·현재제약은 위 원본문서를 읽는다.
+
+INT-01A 추가: [독립 API 검사](api-checks.md)의 identity/time 컴포넌트를 연결했다. 필터의부분성공과 미실행UI/설정/제공처/비밀검사는 전체PASS로 승격하지 않는다.
