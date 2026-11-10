@@ -119,6 +119,9 @@ def run(args):
             home.mkdir(mode=0o700)
             (home / 'tmp').mkdir(mode=0o700)
             copy_build(source, build / 'app')
+            # Frozen staging has a non-writable root too; build scripts need to
+            # create work/ directly under this private, build-owned copy.
+            (build / 'app').chmod((build / 'app').stat().st_mode | 0o200)
             src = Path(__file__).resolve().parents[2] / 'scripts/foundation-atomic-probe.m'
             shutil.copyfile(src, build / 'foundation.m')
             result['foundation_source_sha256'] = digest(src.read_bytes())

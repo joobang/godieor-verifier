@@ -95,6 +95,7 @@ class DedicatedIOSTests(unittest.TestCase):
             account.mkdir()
             app = root / 'app'
             app.mkdir()
+            app.chmod(0o555)
             darwin = root / 'T'
             darwin.mkdir()
             args = argparse.Namespace(out=root / 'out', app=app, manifest=root / 'manifest',
@@ -106,6 +107,7 @@ class DedicatedIOSTests(unittest.TestCase):
                  patch('godieor_verifier.dedicated_ios.command', side_effect=[
                      {'exit_code': 0, 'timeout': False}, {'exit_code': 1, 'timeout': False}]) as execute:
                 result = run(args)
+            self.assertTrue((root / 'out/build/app').stat().st_mode & 0o200)
             self.assertEqual(execute.call_count, 2)
             self.assertEqual(result['status'], 'failed')
             self.assertEqual(result['ios_build'], 'not_executed')
