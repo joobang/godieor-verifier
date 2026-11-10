@@ -161,21 +161,9 @@ def run(args):
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--caller-uid', type=int, required=True)
-    parser.add_argument('--caller-home', type=Path, required=True)
-    parser.add_argument('--original-app', type=Path, required=True, help='existing app file inside caller HOME')
-    parser.add_argument('--app', type=Path, required=True, help='read-only pinned snapshot')
-    parser.add_argument('--manifest', type=Path, required=True)
-    parser.add_argument('--out', type=Path, required=True)
-    args = parser.parse_args()
-    try:
-        result = run(args)
-    except OSError as exc:
-        parser.exit(64, str(exc) + '\n')
-    print(json.dumps(result, indent=2))
-    # A successful diagnostic is not a product or isolation approval.
-    return 0 if result['status'] == 'ios_build_succeeded' else 2
+    """Retired entry point: never launch account diagnostics."""
+    print("전용 계정 검증 방식 폐기: scripts/runner 사용")
+    return 2
 
 
 if __name__ == '__main__':

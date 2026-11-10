@@ -168,6 +168,14 @@ def prepare(args):
     return out, e, acceptance
 
 
+def ios_build_command(build):
+    """Verifier-owned unsigned recipe; no product shell script is launched."""
+    return ['/usr/bin/xcodebuild', '-project', str(build/'ios/GODIEOR.xcodeproj'),
+            '-scheme', 'GODIEOR', '-configuration', 'Debug', '-sdk', 'iphonesimulator',
+            '-destination', 'generic/platform=iOS Simulator',
+            '-derivedDataPath', str(build/'work/DerivedData'), 'CODE_SIGNING_ALLOWED=NO', 'build']
+
+
 def run(args):
     out, evidence, acceptance = prepare(args)
     logs = out/'logs'; logs.mkdir()
@@ -208,11 +216,12 @@ def run(args):
                  'CLANG_MODULE_CACHE_PATH':str(home/'clang-cache'),
                  'COLLECTION_SCHEDULE_ENABLED':'false',
                  'DATABASE_URL':'postgresql://unconfigured@127.0.0.1:1/unconfigured'}
-            def step(name, argv, key, timeout=300, extra=None, fetch=False):
+            def step(name, argv, key, timeout=300, extra=None, fetch=False, sandboxed=True):
                 policy=profile(out/'build',out/'source',home,[node.parent,npm.parent.parent,trusted],cache)
                 if fetch: policy+='\n(allow network-outbound)'
+                if not sandboxed: policy=None
                 item=command(argv,out/'build'/key,{**env,**(extra or {})},logs/(name+'.log'),timeout,policy)
-                item['id']=name; steps.append(item)
+                item['id']=name; item['execution_policy']='sandboxed' if sandboxed else 'local-reviewed'; steps.append(item)
                 if item['exit_code'] or item['timeout']:raise RuntimeError('step 실패: '+name)
                 return item
             version_step=step('node-version',[str(node),'--version'],'backend')
@@ -235,10 +244,16 @@ def run(args):
                 'p=pathlib.Path('+repr(str(home/'probe'))+')',
                 'p.write_text("ok");assert p.read_text()=="ok"'])
             step('boundary-probe',['/usr/bin/python3','-c',probe],'backend')
+            evidence['execution']['tool_versions']['ios_execution_policy']='local-reviewed (same UID; no OS isolation)'
+            # iOS compilation is independent of Docker/backend availability.
+            try:
+                step('ios-build',ios_build_command(out/'build/app'),'app',600,sandboxed=False)
+            except RuntimeError:
+                pass  # The actual failed step remains in evidence; backend checks continue.
             if node.name != 'node': raise ValueError('Node 실행 파일 필요')
             step('dependencies',[str(node),str(npm),'ci','--ignore-scripts',
                 '--registry=https://registry.npmjs.org/','--userconfig='+str(home/'npm-user.config'),'--globalconfig='+str(home/'npm-global.config'),
-                *([] if args.fetch_dependencies else ['--offline']), '--cache',str(cache)],
+                *(['--prefer-offline'] if args.fetch_dependencies else ['--offline']), '--cache',str(cache)],
                 'backend',600,fetch=args.fetch_dependencies)
             step('generate',[str(node),'node_modules/prisma/build/index.js','generate'],'backend',fetch=args.fetch_dependencies)
             step('compile',[str(node),'node_modules/typescript/bin/tsc','-p','tsconfig.json'],'backend')
@@ -249,7 +264,7 @@ def run(args):
                 extra={'DATABASE_URL':url,'CURSOR_SIGNING_KEY':secrets.token_hex(32),'API_HOST':'127.0.0.1'}
                 step('migration',[str(node),'node_modules/prisma/build/index.js','migrate','deploy'],'backend',extra=extra)
                 step('database-smoke',[str(node),str(trusted/'database-smoke.cjs')],'backend',extra=extra)
-            step('ios-build',['/bin/sh','scripts/build-ios.sh'],'app',600)
+
     except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as exc:
         # Do not print secrets, subprocess argv/environment or Docker error text.
         write_json(out/'runner-error.json',{'type':type(exc).__name__, 'message':'실행 단계 오류; steps/log 확인'})

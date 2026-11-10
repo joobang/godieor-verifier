@@ -1,3 +1,5 @@
+> 현재 검증정책: [기존 Mac 계정 검증](docs/local-verification.md). 전용계정/인증전환 방식은 2026-11-10 폐기.
+
 # GODIEOR Verifier
 
 [godieor-app](https://github.com/joobang/godieor-app)과

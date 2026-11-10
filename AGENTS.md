@@ -27,3 +27,5 @@
 - 사용자 지시에 따라 검토 가능한 작업 단위가 되면 적절히 commit한다. push·외부 배포는 별도 요청 범위다.
 
 - 2026-11-09 사용자 보완: 커밋은 영문 타입 + 한글 설명으로 작성한다. 예: `feat: 월간 달력 추가`, `chore: 개발 환경 정리`, `test: 날짜 경계 검사 추가`. 세부 형식은 `docs/system/handoff.md`를 따른다.
+
+- 2026-11-10 사용자 확정: 전용 macOS 계정 방식 폐기. 기존계정의 검토한 고정소스에서 서명없는 iOS 로컬검사, backend sandbox/일회용DB를 실행한다. 계정전환/비밀번호를 요청하지 않는다. local-reviewed와 OS격리를 구분하고 isolation_verified=false 및 미실행검사 표시는 유지한다. 현재 실행정책 원본 docs/local-verification.md.

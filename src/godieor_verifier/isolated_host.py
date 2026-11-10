@@ -37,21 +37,9 @@ def assess(caller_uid, effective_uid, home, darwin_temp, caller_home):
 
 
 def main():
-    p = argparse.ArgumentParser(description='전용 macOS 빌드 UID 읽기 전용 사전점검')
-    p.add_argument('--caller-uid', type=int, required=True,
-                   help='기존 개발 계정의 UID (서로 달라야 함)')
-    p.add_argument('--caller-home', type=Path, required=True,
-                   help='기존 개발 계정의 HOME (빌드 계정에서 겹치지 않아야 함)')
-    args = p.parse_args()
-    try:
-        temp = subprocess.check_output(['/usr/bin/getconf', 'DARWIN_USER_TEMP_DIR'],
-                                       timeout=10, stderr=subprocess.DEVNULL).decode().strip()
-    except (OSError, subprocess.SubprocessError):
-        temp = ''
-    result = assess(args.caller_uid, os.geteuid(), pwd.getpwuid(os.geteuid()).pw_dir,
-                    temp, args.caller_home)
-    print(json.dumps(result, ensure_ascii=False, indent=2))
-    return 0 if result['ready_for_manual_probe'] else 2
+    """Retired entry point: never launch account diagnostics."""
+    print("전용 계정 검증 방식 폐기: scripts/runner 사용")
+    return 2
 
 
 if __name__ == '__main__':

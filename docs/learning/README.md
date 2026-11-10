@@ -62,3 +62,5 @@
 - [LEARN-0013 증거 대상 조합 바인딩](entries/0013-evidence-subject-binding.md) — 검증기 개발자 해설 초안, 증거 진위와 입력 일관성 구분.
 
 - [LEARN-0014 고정 소스와 실제 실행의 경계](entries/0014-snapshot-and-local-runner.md) — 작성자 해설 초안, Git 실행 함정·부분 sandbox 확인·미해결 후손 수명 구분.
+
+- [LEARN-0015 제품 검증과 실행 환경의 범위](entries/0015-local-validation-scope.md) — 전용 계정 폐기, 로컬 빌드와 격리 검증 구분, 작성자 해설 초안.
