@@ -29,3 +29,5 @@ steps.json의 execution_policy는 backend sandboxed/iOS local-reviewed로 구분
 엔진의 기준·필수검사·승인규칙은 낮추지 않았다. 실행한 ios-build와 INT-01A의 event-identity/time-semantics API component를 실제 결과로 연결한다. 필터는 최신정책/이전초안차이로 성공해도부분관찰 SKIPPED, 미실행기준도 SKIPPED, review는 PENDING. 상세 docs/api-checks.md. 때문에 모든 실행단계가 성공해도 전체report는 ERROR일 수 있다. 단계별 성공과 제품통합PASS를 구분한다. 현재 acceptance draft라 공식 제품승인 없음.
 
 P5(setsid 후손)와 완전OS격리는 이 로컬 개발 검사에서 해결한 것으로 취급하지 않는다. 전용계정 방식으로 돌아가려는 후속과제는 폐기했다. 신뢰하지 않는 외부PR 코드의 무인실행 환경은 별도 범위다. 현재 제품기능/데이터연동 작업은 이 격리과제에 종속되지 않는다.
+
+INT-01B: [비밀 검사](secret-check.md)는 명시literal/labelPII 정책으로 source·fixture·완료logs·bundle를스캔한다. 누락/읽기오류/links는ERROR, 값·파일명은출력하지않는다. 이componentPASS와 모든민감정보부재/제품승인을구분한다. UI/로컬설정 수동관찰은카드에별도기록한다.

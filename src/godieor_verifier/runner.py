@@ -9,6 +9,7 @@ import secrets
 import shutil
 import signal
 import subprocess
+import sys
 import time
 import uuid
 
@@ -194,6 +195,28 @@ def api_check_evidence(item, check_id, evidence):
         'coverage':'current policy observations; draft conflict unresolved' if check_id=='filter-intersection' else 'API component; iOS flow is separate'}
 
 
+def secret_check_evidence(item, evidence):
+    status='ERROR' if item['timeout'] or item['exit_code'] not in (0,1) else ('PASS' if item['exit_code']==0 else 'FAIL')
+    if status=='PASS':
+        try:
+            receipt=strict_json(Path(item['log']).read_bytes().splitlines()[-1])
+            from .secret_check import POLICY_VERSION
+            if (set(receipt)!={'schema_version','policy','status','scope','files','findings','errors'} or
+                type(receipt.get('schema_version')) is not int or receipt['schema_version']!=1 or
+                type(receipt.get('findings')) is not int or type(receipt.get('errors')) is not int or
+                receipt.get('policy')!=POLICY_VERSION or
+                receipt.get('status')!='PASS' or receipt.get('scope')!='literal-credentials-and-labelled-pii' or
+                type(receipt.get('files')) is not int or receipt['files']<1 or
+                receipt.get('findings')!=0 or receipt.get('errors')!=0):status='ERROR'
+        except (OSError,ValueError,TypeError,IndexError,AttributeError,RecursionError):status='ERROR'
+    return {'id':'secret-check','run_id':evidence['run_id'],'app_head_sha':evidence['app']['head_sha'],
+        'acceptance_sha256':evidence['acceptance']['sha256'],'subject_sha256':subject_digest(evidence),
+        'status':status,'command':item['command'],'exit_code':item['exit_code'],
+        'started_at':item['started_at'],'finished_at':item['finished_at'],'evidence':item['log'],
+        'scope':'literal-credentials-and-labelled-pii',
+        'coverage':'fixed app/backend source, fixtures, completed step logs, unsigned app bundle; literal policy only'}
+
+
 def ios_build_command(build):
     """Verifier-owned unsigned recipe; no product shell script is launched."""
     return ['/usr/bin/xcodebuild', '-project', str(build/'ios/GODIEOR.xcodeproj'),
@@ -219,6 +242,8 @@ def run(args):
         for suite, cid in [('event-identity','event-identity'),('time-semantics','time-semantics'),('api-filter-observations','filter-intersection')]:
             item=next((s for s in steps if s['id']=='api-'+suite),None)
             if item: evidence['checks'].append(api_check_evidence(item,cid,evidence))
+        secret=next((s for s in steps if s['id']=='secret-check'),None)
+        if secret:evidence['checks'].append(secret_check_evidence(secret,evidence))
         for cid in acceptance['required_checks']:
             if not any(c['id']==cid for c in evidence['checks']):
                 evidence['checks'].append({'id':cid,'run_id':evidence['run_id'],
@@ -303,6 +328,16 @@ def run(args):
     except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as exc:
         # Do not print secrets, subprocess argv/environment or Docker error text.
         write_json(out/'runner-error.json',{'type':type(exc).__name__, 'message':'실행 단계 오류; steps/log 확인'})
+    if args.execute:
+        try:
+            scanner_env={'PATH':'/usr/bin:/bin','PYTHONPATH':str(Path(__file__).resolve().parents[1]),'LANG':'en_US.UTF-8'}
+            # Keep this redacted scanner log outside the input logs directory.
+            item=command([sys.executable,'-m','godieor_verifier.secret_check','--run',str(out)],
+                         out,scanner_env,out/'secret-check.log',120,None)
+            item.update(id='secret-check',execution_policy='verifier-scanner')
+            steps.append(item)
+        except (OSError,subprocess.SubprocessError):
+            write_json(out/'scanner-error.json',{'message':'scanner execution failed; no success inferred'})
     return save()
 
 
