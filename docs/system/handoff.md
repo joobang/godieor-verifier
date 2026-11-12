@@ -1,3 +1,8 @@
+## DATA-44 인계 (2026-11-12)
+
+- backend `docs/tasks/DATA-44-netflix-review-backlog.md`에75건/미분류44건 재현 분류와 행별 후속 검토표. `scripts/classify-ott-review-backlog.mjs`, `data/reference/netflix-kr-*-2026-11-12.json` 및 검토 매핑 snapshot 사용. 검색미발견33/후보날짜이전10/이후1, 기존검토2+시즌미확인1+매핑미일치41. 날짜차이를 입점/재공개로 단정하지 않음.
+- 최종Node22 npm test145/145 통과(기존dirty/미추적포함working tree), 권장Node24·독립검증미실행. 웹/DB이번조회0·신규게시0, 이전로컬42건은재측정아님. 다음은33건공식videoID원제/종류확인→11건정체성/플랫폼날짜의미→알리시아의법시즌확인. 앱코드/계약/migration/verdict변경없음. 공통문서이번머리말만선택커밋, 기존본문dirty/signing/다른도구보존. 담당codex-data44-01해제.
+
 ## DATA-18 인계 (2026-11-11)
 
 backend 공식 KR 공개 후보 2건(`재혼 황후` 11/03·`스마일 클리닉` 12/03) 추가, staging 86→88, 재실행 중복 0, 테스트 75/75. 신규 게시 0, DB 재조회/독립 검증/클라우드 배포 미실행. 원본 backend `docs/tasks/DATA-18-kr-ott-premiere-evidence.md`. 다음 담당은 reviewed candidate 수동 검토 연결 후 실제 DB 게시 여부 확인. iOS signing 미커밋 보존.
