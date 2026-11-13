@@ -72,3 +72,5 @@
 - [LEARN-0018 공개·계정 API 주소 일치](entries/0018-shared-api-endpoint.md) — 작성자 해설 초안, 정적불일치·번들주입검사·실기기미확인 구분.
 
 - [LEARN-0019 계정 읽기 일관성](entries/0019-account-read-consistency.md) — 두 연결 합성 재현, 작성자 관측/독립 승인 대기.
+
+- [LEARN-0020 계정 작업 소유권](entries/0020-account-operation-ownership.md) — 실제 앱 코드의 합성4실패→15/15, 작성자 관측/독립 검증 전.
