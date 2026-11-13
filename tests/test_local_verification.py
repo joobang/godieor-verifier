@@ -43,7 +43,9 @@ class LocalVerificationTests(unittest.TestCase):
                 evidence['execution']['mode']='external-runner'
                 args=SimpleNamespace(execute=True,node=out/'tools/node',npm_cli=out/'tools/npm-cli.js',
                     npm_cache=out/'cache',app=out/'original-app',app_head=evidence['app']['head_sha'],fetch_dependencies=False)
+                observed_envs={}
                 def command(argv,cwd,env,log,timeout,policy):
+                    observed_envs[Path(log).stem]=dict(env)
                     Path(log).write_text('v24.19.0\n' if Path(log).stem=='node-version' else 'synthetic')
                     code=ios_exit if Path(log).stem=='ios-build' else 0
                     return dict(command=argv,exit_code=code,started_at='2026-11-10T00:00:00Z',
@@ -65,3 +67,7 @@ class LocalVerificationTests(unittest.TestCase):
                 self.assertIn('tests/synthetic.test.cjs',backend['command'])
                 self.assertIn('tests/synthetic.test.mjs',backend['command'])
                 self.assertEqual(any(s['id']=='database-smoke' for s in steps),not db_fails)
+
+                if not db_fails:
+                    self.assertEqual(observed_envs["database-smoke"]["COLLECTION_INCLUDE_FIXTURE"],"true")
+                    self.assertNotIn("COLLECTION_INCLUDE_FIXTURE",observed_envs["api-event-identity"])

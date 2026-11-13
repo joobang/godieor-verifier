@@ -333,7 +333,8 @@ def run(args):
                         step('api-'+suite,[str(node),str(trusted/'api-checks.cjs'),suite],'backend',extra=extra)
                     except RuntimeError:
                         pass  # Retain each actual failure and continue the other independent observations.
-                step('database-smoke',[str(node),str(trusted/'database-smoke.cjs')],'backend',extra=extra)
+                step('database-smoke',[str(node),str(trusted/'database-smoke.cjs')],'backend',
+                     extra={**extra,'COLLECTION_INCLUDE_FIXTURE':'true'})
 
     except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as exc:
         # Do not print secrets, subprocess argv/environment or Docker error text.
