@@ -2,7 +2,7 @@
   "contractVersion": "0.1.0-draft.4",
   "status": "draft-not-approved",
   "ownerRepository": "https://github.com/joobang/godieor-backend",
-  "backendCommit": "727e71eb8c833529c53a6780e365e4292c18bd1e",
+  "backendCommit": "64669d8c9986d9c2a0f49ac6780644c41b689ba7",
   "manifestPath": "contracts/manifest.json",
   "manifestSha256": "2cde5665facbebbd7ee634630e49b22048985b63f2a9cd70adc36cc73200d72c",
   "files": {
