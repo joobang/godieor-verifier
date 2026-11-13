@@ -1,14 +1,37 @@
 import json
 import os
+import shutil
 from pathlib import Path
 import subprocess
 import tempfile
 import unittest
 from godieor_verifier.snapshot import snapshot, freeze, copy_build, migration_manifest
-from godieor_verifier.runner import command, profile
+from godieor_verifier.runner import command, profile, backend_test_files
 
 
 class RunnerTests(unittest.TestCase):
+    def test_esm_failure_is_executed_even_when_commonjs_passes(self):
+        node = shutil.which('node')
+        if not node:
+            self.skipTest('Node is unavailable')
+        tests = self.root/'tests';tests.mkdir()
+        (tests/'pass.test.cjs').write_text("require('node:test')('synthetic CJS pass',()=>{});\n")
+        (tests/'fail.test.mjs').write_text("throw new Error('synthetic ESM failure');\n")
+        (tests/'fixture.mjs').write_text("throw new Error('not a test');\n")
+        result = subprocess.run([node, '--test', *backend_test_files(self.root)],
+                                cwd=self.root, capture_output=True, text=True,
+                                env={'PATH':'/usr/bin:/bin'}, timeout=20)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('synthetic ESM failure', result.stdout + result.stderr)
+        self.assertNotIn('not a test', result.stdout + result.stderr)
+
+    def test_no_suite_or_linked_suite_is_an_error(self):
+        with self.assertRaises(ValueError):backend_test_files(self.root)
+        tests=self.root/'tests';tests.mkdir()
+        target=self.root/'synthetic';target.write_text('not executed')
+        (tests/'linked.test.mjs').symlink_to(target)
+        with self.assertRaises(ValueError):backend_test_files(self.root)
+
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.root = Path(self.tmp.name)

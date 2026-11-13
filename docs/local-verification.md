@@ -31,3 +31,5 @@ steps.json의 execution_policy는 backend sandboxed/iOS local-reviewed로 구분
 P5(setsid 후손)와 완전OS격리는 이 로컬 개발 검사에서 해결한 것으로 취급하지 않는다. 전용계정 방식으로 돌아가려는 후속과제는 폐기했다. 신뢰하지 않는 외부PR 코드의 무인실행 환경은 별도 범위다. 현재 제품기능/데이터연동 작업은 이 격리과제에 종속되지 않는다.
 
 INT-01B: [비밀 검사](secret-check.md)는 명시literal/labelPII 정책으로 source·fixture·완료logs·bundle를스캔한다. 누락/읽기오류/links는ERROR, 값·파일명은출력하지않는다. 이componentPASS와 모든민감정보부재/제품승인을구분한다. UI/로컬설정 수동관찰은카드에별도기록한다.
+
+DATA-48: backend 자체검사는 고정 source의 `tests/*.test.cjs`와 `tests/*.test.mjs`를 모두 수집한다. 빈 목록·symlink는 오류 처리하며, ESM 실패가 실행 결과에 반영되는 회귀검사를 유지한다. 승인 기준 변경이 아닌 실행 누락 보완이다.

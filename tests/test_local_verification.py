@@ -33,6 +33,9 @@ class LocalVerificationTests(unittest.TestCase):
         for ios_exit, db_fails in [(65,False),(0,True)]:
             with self.subTest(ios_exit=ios_exit, db_fails=db_fails), tempfile.TemporaryDirectory() as tmp:
                 out=Path(tmp);(out/'build').mkdir();(out/'cache/_cacache').mkdir(parents=True)
+                suites=out/'build/backend/tests';suites.mkdir(parents=True)
+                (suites/'synthetic.test.cjs').write_text('// synthetic CJS suite\n')
+                (suites/'synthetic.test.mjs').write_text('// synthetic ESM suite\n')
                 raw=(ROOT/'requirements/acceptance.yaml').read_bytes();(out/'acceptance.json').write_bytes(raw)
                 acceptance=json.loads(raw)
                 evidence=json.loads((ROOT/'examples/evidence-v2.json').read_text())
@@ -58,4 +61,7 @@ class LocalVerificationTests(unittest.TestCase):
                 self.assertEqual(ios['status'],'FAIL' if ios_exit else 'PASS')
                 steps=json.loads((out/'steps.json').read_text())
                 self.assertTrue(any(s['id']=='backend-tests' for s in steps))
+                backend=next(s for s in steps if s['id']=='backend-tests')
+                self.assertIn('tests/synthetic.test.cjs',backend['command'])
+                self.assertIn('tests/synthetic.test.mjs',backend['command'])
                 self.assertEqual(any(s['id']=='database-smoke' for s in steps),not db_fails)

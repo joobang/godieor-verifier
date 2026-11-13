@@ -28,6 +28,16 @@ def write_json(path, data):
     Path(path).write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n')
 
 
+def backend_test_files(root):
+    """Match the backend's CJS and ESM test suites without implicit discovery."""
+    root = Path(root)
+    paths = sorted(p for pattern in ('*.test.cjs', '*.test.mjs')
+                   for p in (root/'tests').glob(pattern))
+    if not paths or any(p.is_symlink() or not p.is_file() for p in paths):
+        raise ValueError('backend test files missing or not regular')
+    return [str(p.relative_to(root)) for p in paths]
+
+
 def profile(build, source, home, tools, cache):
     # Deliberately no access to the invoking user's HOME, repos, Docker socket or artifacts.
     # Foundation atomic writes / Xcode use the host's Darwin user temp directory
@@ -312,7 +322,7 @@ def run(args):
                 'backend',600,fetch=args.fetch_dependencies)
             step('generate',[str(node),'node_modules/prisma/build/index.js','generate'],'backend',fetch=args.fetch_dependencies)
             step('compile',[str(node),'node_modules/typescript/bin/tsc','-p','tsconfig.json'],'backend')
-            tests=sorted(str(p.relative_to(out/'build/backend')) for p in (out/'build/backend/tests').glob('*.test.cjs'))
+            tests=backend_test_files(out/'build/backend')
             step('backend-tests',[str(node),'--test',*tests],'backend')
             with database() as (name,url):
                 write_json(out/'database.json',{'container':name,'image':IMAGE,'temporary':True})
