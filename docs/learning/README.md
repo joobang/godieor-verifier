@@ -70,3 +70,5 @@
 - [LEARN-0017 비밀 검사 정책과 UI 관찰 범위](entries/0017-secret-policy-and-ui-scope.md) — 작성자 해설 초안, 명시 literal 정책·오류 누락 방지·로컬 설정과 서버 왕복 구분.
 
 - [LEARN-0018 공개·계정 API 주소 일치](entries/0018-shared-api-endpoint.md) — 작성자 해설 초안, 정적불일치·번들주입검사·실기기미확인 구분.
+
+- [LEARN-0019 계정 읽기 일관성](entries/0019-account-read-consistency.md) — 두 연결 합성 재현, 작성자 관측/독립 승인 대기.
