@@ -33,7 +33,7 @@
 | [LEARN-0009](entries/0009-nest-layer-boundaries.md) | Nest 기능 모듈과 계층 책임 수정 | 실제 구조 결함 해결 | 작성자 28검사·임시 DB/API 호환, 고정 코드 리뷰 추가 지적 없음 보고 |
 
 | [LEARN-0010](entries/0010-prisma-client-and-sql.md) | Prisma Client 우선과 SQL 예외·타입 보장 | 쿼리 개선/예방 설계 | 자체33개·임시DB 회귀·고정 코드 리뷰 |
-| [LEARN-0011](entries/0011-reviewed-candidates-to-events.md) | 검토 공지에서 안정 이벤트로 수동 반영 | 제품 연결/예방 설계 | 전체47개·임시DB·로컬4건 조회, 독립 통합 검증 전 |
+| [LEARN-0011](entries/0011-reviewed-candidates-to-events.md) | 검토 공지에서 안정 이벤트로 수동 반영 | 제품 연결/예방 설계 | 초기47검사·로컬4건; DATA-47 유형거부/5건 추가 작성자 관측, 독립 통합 검증 전 |
 
 ## 가볍게 유지하는 방법
 
