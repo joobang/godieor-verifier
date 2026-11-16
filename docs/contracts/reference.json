@@ -1,34 +1,35 @@
 {
-  "contractVersion": "0.1.0-draft.4",
+  "contractVersion": "0.1.0-draft.5",
   "status": "draft-not-approved",
   "ownerRepository": "https://github.com/joobang/godieor-backend",
-  "backendCommit": "d0b5f6c38bcc1982e5551195f2b235b78095197c",
+  "backendCommit": "46751285a88f96ac88ea719a4e5daff791d96a5a",
   "manifestPath": "contracts/manifest.json",
-  "manifestSha256": "96cc08536324f8b5a7c537783caa93a1ce33de533526032e01621282fb601122",
+  "manifestSha256": "0ffd7cbcdcb3c46b450e626ced90055e985308d728c279832aa00ec76b24e9c9",
   "files": {
-    "contracts/README.md": "83b38741474687f7e84d929e2b4ff0cf5221f52c00c36a102247ec1abd4734d4",
+    "contracts/README.md": "afbf347bfd988131e307a832c6693c4b8639cc90ef4d11228b7df9e184c54eee",
     "contracts/database.md": "17fe8b5b6578494048b0ec063d38fb8c5ab0384df0819a4b4bd6a4775579cec3",
-    "contracts/database.sql": "a863cd97c049bc3e70e891085a0ec3faaf02d5c7bb987df8f7f8e88de180f9c6",
+    "contracts/database.sql": "978fe52c80fc70622c59c613985d983e9c50a6a03c2365df975c149303362cf8",
     "contracts/examples/README.md": "13fbecc0d2048ef245f27d950b62ec002e0163bb90dfdd90ae1cf82f2a2f82ec",
     "contracts/examples/calendar.json": "2cb8e2fd927ced410e70e231a5994ffb22ef335e97536c4217f1250b65018ddd",
     "contracts/examples/event-detail.json": "3d3dd3920a7fa693e11cb4e90def78750e9c82f806a53c5aa2c46eef0bb4ecae",
     "contracts/examples/events-page.json": "45c3bb87e4325dc3a15f090d10f07110a79259cf283056996a62ded82a92f191",
     "contracts/examples/settings.json": "6556f1aa9313eb40b014f3bb2caea8b882eed3a658ad2bd2e5a303735b0831b5",
-    "contracts/implementation.md": "d598898651451a1c4e4de5344aa065a4c358ea0cd56c83cd44092381392b8aec",
-    "contracts/openapi.yaml": "d9440942e9961a010181d7ea0c1780a7dd984d4b2c114ab58fec634792d0ab87"
+    "contracts/implementation.md": "a633a03fffc904b7cab83d2eaf9faaaae7a91fd1ba4185e97305117ef1f06f93",
+    "contracts/openapi.yaml": "e27c86369a58a14432d6d33f09660fd430c690910d07d014a890e0b180262672"
   },
   "runtimeFiles": {
-    "prisma/schema.prisma": "3732f94e74136139a9b2639268d28510657cbfeec7fe259ecbe989356d2726b4",
     "package-lock.json": "c1ff417af46bd1328e890dadb094130837fbe8dd41b4ac8699ef6da54ca15246",
     "prisma/migrations/202611090001_initial/migration.sql": "29ef8ef0d520f44b6a633e8f017144a3e2b2199189461a88ba99bc296c42f5b9",
     "prisma/migrations/202611100001_ott_categories/migration.sql": "3f1fd7bf4049300bf2f05dc1f879771f27c6c3060ad8142b2e3ae0d60ba20119",
     "prisma/migrations/202611110001_mobile_game_devices/migration.sql": "e8936f2541c4503a5d98f00f7063a54b4a7c2db9b23c4aca2b6c58ef07b21390",
     "prisma/migrations/202611130001_ott_documentary/migration.sql": "d858fdf525aef2446435f6ee8f8ecacc3025c6ab189666a39c6ea1d6363f1ca3",
-    "prisma/migrations/migration_lock.toml": "1db17a8d051aa136110736752c5e1f8b7ed92b6ea8e803112fbbe2497047c210"
+    "prisma/migrations/202611160001_ott_animation/migration.sql": "82d3750719ebd9b5a8054f608f46ea01542db8dd52912e559b79461e272bf4d8",
+    "prisma/migrations/migration_lock.toml": "1db17a8d051aa136110736752c5e1f8b7ed92b6ea8e803112fbbe2497047c210",
+    "prisma/schema.prisma": "3732f94e74136139a9b2639268d28510657cbfeec7fe259ecbe989356d2726b4"
   },
   "policyRevision": "SYNC-2026-11-09-13",
   "contractReview": "author-review-recorded-independent-review-pending",
   "runtimeStatus": "implementer-local-startup-and-fixture-ingestion-recorded",
   "independentVerification": "not-run",
-  "tests": "DATA-48 documentary targeted tests 18 passed; fixed-source execution tracked in task card"
+  "tests": "DATA-56: working-tree 218 tests; fixed-source results in task evidence; animation synthetic decode/DDL checked; no independent approval"
 }
