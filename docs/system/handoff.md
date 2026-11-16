@@ -1,3 +1,7 @@
+## DATA-65 · TMDB 증분 수집 인계 (2026-11-16)
+
+- backend `docs/tasks/DATA-65-tmdb-incremental-change-sync.md` 참조. 신규 Changes API 1일 실측 2,564 ID·기존 1,215후보 중 교차70, 실행 단계·파일 체크포인트 연결. 253/253 테스트 통과. 일반 회차를 첫 공개로 확정하지 않음. 다음은 Disney+/Coupang 공식 신규 수집→TMDB 매칭→한국 플랫폼별 첫날 검증→신규 DB 게시→24행 재감사. 통합 실행/독립검증 미실시. revision DATA-65-2026-11-16.
+
 ## DATA-63 · 공식 OTT 파이프라인 실제 실행 인계 (2026-11-16)
 
 - backend `docs/tasks/DATA-63-official-pipeline-orchestration.md` 원본. 수집→후보→review 매핑→로컬 DB 70건 게시→52행 감사 통합 실행 성공. 신규 TVING 영화 후보2, 검토 매핑 추가0, 참조 26/52 일치·날짜차이2·미게시24. 날짜 검증 없는 자동 승인/게시 금지. TMDB provider 커버리지 미완전. 테스트178/178, 독립 runner 미실행. revision DATA-63-2026-11-16.
