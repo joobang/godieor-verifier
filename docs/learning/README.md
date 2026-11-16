@@ -74,3 +74,5 @@
 - [LEARN-0019 계정 읽기 일관성](entries/0019-account-read-consistency.md) — 두 연결 합성 재현, 작성자 관측/독립 승인 대기.
 
 - [LEARN-0020 계정 작업 소유권](entries/0020-account-operation-ownership.md) — 실제 앱 코드의 합성4실패→15/15, 작성자 관측/독립 검증 전.
+
+- [LEARN-0021 OTT 참조 항목 일치](entries/0021-streampick-parity.md) — 새 시즌 분모 누락 재현, 총수와 정확 일치 구분, 작성자 관측/목표 미완료.
