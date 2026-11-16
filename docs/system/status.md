@@ -1,3 +1,12 @@
+## DATA-69 · 신규 첫 공개 근거 연결·일간 실행 결과 확정 (2026-11-16)
+
+- 원본 backend `docs/tasks/DATA-69-new-premiere-evidence.md`, 구현 `1e5fcf4db7141a798541682d4fdbc261508b6b43`, ADR-022/LEARN-0021. 이번 작업에서 StreamPick parity는 완료 기준 제외.
+- 이전 실제 TMDB 전수 실행 완주를 관측: 3,305작품/1,217후보/49검토준비/요청오류0. Coupang 영화 provider 미등재로 discoveryComplete=false는 남는다.
+- 쿠팡 공식 기사에서 작품별 날짜·시즌·출연진을 보존하고, 명시 첫 공개+고유 TMDB/2인 출연진·TV 명시 시즌/첫 회 검증이면 기존 curated binding 없이 검토→고정 키→게시 경로로 연결한다. 현재 실제 날짜 주장3은 전부 보류(첫 공개 명시 없음/정체성·시즌 부족), 신규 실게시0.
+- Node24.22.3 영속 경로로 KST09시 LaunchAgent 재등록(Node20 설정 수정), 일간 수동실행 exit2/기존70게시. 단계별 결과 저장·타임아웃 수집 후손 종료 지원. 다음날 자동기동 미관측.
+- 자체검사276/276. 가상 신규 근거→일회용PostgreSQL 1→2→2/기존행·이력/날짜만 보존 검사 성공(로컬 postgres:16-alpine, 고정digest 아님). 실제 기존70행 hash·변경이력 보존 확인. 독립runner/리뷰·폰/클라우드 미실행, 계약/migration/acceptance·verdict 불변.
+- 다음은 실제 신규 첫 공개 공식 문구·고유 시즌 근거 확대→신규 DB 게시 실측. Netflix/TVING/Disney+ 신규 첫날의 일반 자동확정은 미완료다. 상세 원본/판정 보류 사유는 작업 카드와 evidence/data69. 개인 pbxproj 보존·담당 해제, 공통 revision DATA-69-2026-11-16.
+
 ## DATA-67 · OTT 원천 실패 격리와 실제 DB 게시 감사 (2026-11-16)
 
 - backend 원본 `docs/tasks/DATA-67-source-failure-isolation.md`. Netflix/TMDB 원천 오류가 모든 OTT 수집을 종료시키는 경로를 격리하고 `failedSources`/단계별 상태를 남긴다. 공식 일정·TMDB 검증 없는 신규 첫날 자동 승인은 여전히 금지.
