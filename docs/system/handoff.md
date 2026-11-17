@@ -1,3 +1,16 @@
+## LEARN-REPAIR-01 · 학습 해설 품질 시정 (2026-11-17)
+
+- 사용자 지적: 작업·검증 요약 누적으로 기술 선택과 해결 원리를 읽기 어려움. 원본 app `docs/ai/tasks/LEARN-REPAIR-01.md`.
+- verifier 학습 21편 점검, 0006/0010/0015/0020/0021의 문제·예제·대안·선택 이유·비용을 재작성하고 편집 전 원문 보존. 나머지 16편은 카탈로그에 보완점 명시, 전체 개선 미완료.
+- 공통 `learning-policy.md`와 작업/학습 템플릿에 해설 기준 연결. 제품 코드·DB·계약·승인 상태 변경 없음. 문서·링크·원문 보존 검사만 수행하며 제품·독립 검증 결과를 새로 만들지 않음.
+- 다음 학습 작업은 남은 16편 원본 대조·재작성. 데이터→배포→기능→디자인의 제품 순서는 유지. revision `SYNC-2026-11-17-LEARN-REPAIR-01`.
+
+## DATA-80 · 데이터 1~5 실환경 전체 재점검 (2026-11-17)
+
+- 원본 backend `docs/tasks/DATA-80-five-workstream-live-audit.md`. OTT 공식 일일 전체 실행 exit2(`published_with_discovery_gaps`), 신규0/기존93, TMDB 후보1254·준비49·Coupang 제공처 누락, Netflix 조회 실패3·Coupang 보류3·날짜 미정 정체성57 보류.
+- DB event/source32693/32693·찜1·OTT93·IGDB29924 실행 전후 동일. IGDB 과거49 공개 참조 보존(불일치0)·가능중복38·지역 미확정49. 테스트340/340, OTT 독립 참조52 중 일치26/상이2/미게시24. 일일 제공처9범위 당일 기수집 skip; 정시 자연 기동·독립 제품 통합 PASS 미입증. **적재100% 미달**.
+- 후속: 공식 첫날 증거·제공처 누락 해결, 과거 IGDB 지역/alias 근거 검토, 자연 스케줄 및 API·독립 runner 확인. LEARN 기존0006/0021 연계. 원천 ID·찜/계약·verdict 불변, 배포·push 미실행.
+
 ## DATA-79 · 적재 검증 환경 복구·완료조건 재점검 (2026-11-17)
 
 - backend 원본 `docs/tasks/DATA-79-local-snapshot-regression.md`. 보관된 실제 OTT 후보 199건과 TMDB 발견 1,261행 스냅샷을 현재 backend의 Git 무시 `work/`에 SHA256 동일하게 복원. 공식 Node24.22.3에서 빌드 및 **전체 테스트 340/340 통과**. 이전 15개 실패는 후보 작업 파일 누락이었다.
@@ -571,5 +584,6 @@ backend `b637ecb`: 한국 공식 OTT 목록을 시작점으로 플랫폼/날짜/
 
 ## DATA-76 · IGDB 검토 큐 인계 (2026-11-17)
 
-- backend 원본 `docs/tasks/DATA-76-igdb-review-queue.md`. 감사49건 검토 큐: 중복 가능38/근거 부족11; DB·공용ID·찜·판정/기준 불변. 사람별 증거 검토 및 독립 검증은 후속.
+- backend `docs/tasks/DATA-76-igdb-review-queue.md` 원본. 감사49행을 읽기 전용 검토 큐로 분류: 다른 공개 ID와 중복 가능38·원천 근거 부족11. 자동 alias/병합/비게시 및 DB 쓰기0.
+- 기존 공개 event ID와 계정 찜 유지. 원천 region NULL 과거49건은 미확정, 사람별 검토·독립 runner·제품 통합 PASS 미실행. 다음은 공식 ID/숫자 지역/플랫폼/날짜·찜 참조 검토 및 게시 검토 상태 설계.
 

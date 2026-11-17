@@ -1,3 +1,16 @@
+## LEARN-REPAIR-01 · 학습 해설 품질 시정 (2026-11-17)
+
+- 사용자 지적: 작업·검증 요약 누적으로 기술 선택과 해결 원리를 읽기 어려움. 원본 app `docs/ai/tasks/LEARN-REPAIR-01.md`.
+- verifier 학습 21편 점검, 0006/0010/0015/0020/0021의 문제·예제·대안·선택 이유·비용을 재작성하고 편집 전 원문 보존. 나머지 16편은 카탈로그에 보완점 명시, 전체 개선 미완료.
+- 공통 `learning-policy.md`와 작업/학습 템플릿에 해설 기준 연결. 제품 코드·DB·계약·승인 상태 변경 없음. 문서·링크·원문 보존 검사만 수행하며 제품·독립 검증 결과를 새로 만들지 않음.
+- 다음 학습 작업은 남은 16편 원본 대조·재작성. 데이터→배포→기능→디자인의 제품 순서는 유지. revision `SYNC-2026-11-17-LEARN-REPAIR-01`.
+
+## DATA-80 · 데이터 1~5 실환경 전체 재점검 (2026-11-17)
+
+- 원본 backend `docs/tasks/DATA-80-five-workstream-live-audit.md`. 실제 OTT 전체 실행 14:17~14:42 KST exit2, `published_with_discovery_gaps`, 신규 게시0/기존93 유지. TMDB 후보1254·검토준비49·Coupang 영화 제공처 미발견, Netflix 공식 조회 실패3, Coupang 첫날 보류3, 미정 식별57.
+- 실 DB event/source 32693/32693·찜1·OTT93·IGDB29924 실행 전후 동일. IGDB 공개 참조49/49 불일치0·가능중복38·원천지역 미확정49. 자체 테스트340/340, 제삼자 OTT 기준52 중 정확26·날짜상이2·미게시24. 일일 제공처9범위 당일 skip 확인, 08:30 자연 기동 미관측. **데이터100% 미달**.
+- 다음: Coupang/TMDB·Netflix 공식 근거 누락 해소→IGDB 수동 증거 검토→자연 스케줄 관측→DB/API·독립 검증. 계약/DB 수정·push·배포 없음.
+
 ## DATA-79 · 적재 검증 환경 복구·완료조건 재점검 (2026-11-17)
 
 - backend 원본 `docs/tasks/DATA-79-local-snapshot-regression.md`. 보관된 실제 OTT 후보 199건과 TMDB 발견 1,261행 스냅샷을 현재 backend의 Git 무시 `work/`에 SHA256 동일하게 복원. 공식 Node24.22.3에서 빌드 및 **전체 테스트 340/340 통과**. 이전 15개 실패는 후보 작업 파일 누락이었다.
@@ -577,7 +590,8 @@ backend `b637ecb`: 한국 공식 OTT 목록을 시작점으로 플랫폼/날짜/
 - nullable migration과 DB 참조 계약 manifest 갱신. Node24 전체 자체검사 **332/332**·IGDB 관련 13/13 및 일회용 PostgreSQL migration/가상7건·반복수집·계정·찜 회귀 통과. 실제 DB migration/원천 재수집·독립 검증·클라우드 미실행.
 - 원본지역 확보는 provenance 개선이며 기존 49건 중복 정정·게시 상태 설계·일반 자동 첫날 확인은 남는다. ADR024/LEARN0006; revision DATA-75-2026-11-17. 데이터→배포→기능→디자인 순서 유지.
 
-## DATA-76 · IGDB 검토 큐 (2026-11-17)
+## DATA-76 · IGDB 중복 의심 검토 큐 (2026-11-17)
 
-- backend `docs/tasks/DATA-76-igdb-review-queue.md`: 공식 감사49건을 읽기 전용 큐로 분류. 중복 의심38·근거 부족11; 자동 병합/게시 변경 없음. verifier acceptance/verdict·독립 검증 결과 변경 없음.
+- backend 원본 `docs/tasks/DATA-76-igdb-review-queue.md`. DATA74 공식 원천 감사 49건을 공개 event ID/후보 release ID/다른 저장 event ID로 구분해 검토 큐로 추출. 중복 의심38·원천 근거 부족11이며 중복 확정이나 자동 교정 건수가 아니다.
+- 모든 항목은 수동 검토 대기. 공용 ID·찜·날짜·DB·앱 표시/계약·verifier 승인 불변. 기존 과거 원천 region NULL을 추정하지 않는다. 다음은 공식 증거와 참조를 검토한 뒤 내부 게시 검토와 event 상태·alias 정책을 분리 설계한다. 데이터 단계 진행 중.
 

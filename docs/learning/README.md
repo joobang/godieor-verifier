@@ -1,78 +1,48 @@
-# GODIEOR 개발·학습 기록
+# GODIEOR에서 기술을 선택하고 문제를 푸는 과정
 
-목적은 선택의 이유와 해결 과정을 보존하고, 나중에 스스로 설명하거나 글로 발전시키는 것이다.
-통합 카탈로그 원본은 `godieor-verifier/docs/learning/`이다. 앱·backend·검증기의 사례를 여기서 찾는다.
-문제 조사·기술 결정 원본은 문제가 생긴 저장소의 작업 기록/ADR,
-검사 결과 원본은 verifier run이며 요약 문서에서 다른 정답을 만들지 않는다.
-2026-11-09 구조 정리로 app의 기존 학습 글을 이 위치로 옮겼다. 예전 경로에는 안내만 남겼다.
+이곳은 작업을 처음 보는 개발자가 “무엇이 문제였고, 왜 이 방법을 골랐으며, 어떤 조건이면 다른 방법을 고를까”를 이해하기 위한 기술 해설 모음이다. 실제 코드·결정·실험을 바탕으로 설명한다. 원본 ADR과 작업 카드는 근거 확인에 사용한다.
 
-## 원본과 통합 해설의 역할
+2026-11-17 사용자 지적으로 기존 글의 품질을 점검했다. 원리·대안·예제보다 작업 ID와 검사 경과를 압축한 글이 많았고, 여러 주제를 후속 기록으로 덧붙여 읽기 어려워졌다. 이번에는 5편을 재작성했다. 나머지 16편은 아래에 보완점을 표시했으며 전체 개선 완료로 취급하지 않는다.
 
-| 위치 | 남기는 내용 | 작성·검토 방식 |
+## 먼저 읽을 글
+
+| 궁금한 것 | 글 | 읽을 수 있는 내용 |
 |---|---|---|
-| app/backend의 작업 기록·ADR | 해당 코드의 증상·가설·선택·대안·수정·자체 검사 | 구현 담당이 실제 근거로 기록 |
-| verifier run·finding ledger | 독립 재현·실행 결과·해결 확인 | 독립 검사/리뷰의 근거 보존 |
-| 이 카탈로그 | 원리 해설·관련 사례·면접/블로그 초안·학습 질문 | 원본 링크·SHA/run을 연결하고 미검증 주장을 명시 |
+| 실제 API보다 가상 입력부터 붙인 이유는? | [LEARN-0006 · 수집 파이프라인](entries/0006-local-pipeline.md) | 단계별 책임, 안정적인 이벤트 ID, 원자적 게시, 실제 수집의 한계 |
+| Prisma를 쓰는데 SQL도 필요한가? | [LEARN-0010 · ORM과 SQL의 경계](entries/0010-prisma-client-and-sql.md) | 생성 타입과 수동 타입, 날짜 계산 조회, 입력 바인딩과 출력 검사 |
+| Docker 오류가 왜 앱 검사를 막았나? | [LEARN-0015 · 검사 의존 관계](entries/0015-local-validation-scope.md) | 독립 검사와 선행 조건, 실패와 실행 누락, 검사 목록의 중요성 |
+| 늦은 응답이 새 화면을 덮으면 어떻게 하나? | [LEARN-0020 · 요청의 소유권](entries/0020-account-operation-ownership.md) | 응답 역전, 세션·revision·UUID가 각각 막는 문제 |
+| 데이터가 많은데 필요한 작품은 왜 없나? | [LEARN-0021 · 항목별 누락 판단](entries/0021-streampick-parity.md) | 비교 단위와 분모, 후보·게시·일치의 차이, 발견과 근거 분리 |
 
-검증 담당이 모든 개발 일지를 대신 쓰는 구조는 아니다. 구현 담당은 자기 작업 원본과 학습 초안을 남기고,
-통합 담당이 여기서 연결한다. 초안 작성자가 스스로 독립 검증 완료나 사용자 이해 완료를 표시하지 않는다.
-검토 결과가 있는 글도 코드 변경 시 재검토할 수 있으며, 원시 토큰·개인정보·비밀을 넣지 않는다.
+위 5편은 **2026-11-17 본문 재작성** 상태다. 문서의 편집 상태이며, 새 제품 검사나 독립 승인 상태를 나타내지 않는다. 설명용 가상 예제와 당시 실제 관측을 본문에서 구분했다.
 
-## 기록 목록
+## 기존 글과 남은 보완
 
-| ID | 주제 | 종류 | 현재 상태 |
-|---|---|---|---|
-| [LEARN-0001](entries/0001-time-and-release-events.md) | 날짜와 시각, 콘텐츠와 공개 이벤트를 왜 나누는가 | 설계 사례 | 초안, 제품 구현/사고 사례 아님 |
-| [LEARN-0002](entries/0002-verdict-and-evidence.md) | AI가 통과했다고 말해도 검사가 필요한 이유 | 검증기 구현 사례 | bootstrap 엔진 자기 검사 근거 있음, 운영 적용 전 |
-| [LEARN-0003](entries/0003-independent-review-found-engine-gaps.md) | 독립 리뷰가 기존 테스트의 빈틈을 찾은 사례 | 개발 중 결함 해결 | 4건 재현·수정·독립 재확인, 사용자 설명 미기록 |
-| [LEARN-0004](entries/0004-three-repository-boundaries.md) | 세 저장소의 책임과 검증 버전 조합 | 설계 변경 | 문서 반영, runtime 확장·세부 정책 미확정 |
-| [LEARN-0005](entries/0005-contract-time-integrity.md) | 캘린더 API·DB의 날짜/관계/조회 버전 분리 | 예방 설계 | 계약 설계 기록, 후속 로컬 구현은 LEARN-0006 / 독립 검증 전 |
-| [LEARN-0006](entries/0006-local-pipeline.md) | 가상 제공처·실제 백필/일일 운영·날짜/원천ID의 근거 분리 | 초기 구현/실제 DATA73~74 운영 | 작성자 실제 SQL/API·331자체/일회용DB·기동/복구 검사, 독립 승인 전 |
-| [LEARN-0007](entries/0007-ott-source-evidence.md) | OTT 공식 공지·RSS와 최초 공개일 근거의 차이 | 실제 출처 조사 | 작성자 공개 접근 확인, 제품 연동/독립 검증 전 |
-| [LEARN-0008](entries/0008-ott-candidate-gates.md) | OTT 공지 후보와 정확한 날짜 검토 분리 | 로컬 수집 구현 | 작성자 17검사·RSS 실행, 제품 publish/독립 검증 전 |
-| [LEARN-0009](entries/0009-nest-layer-boundaries.md) | Nest 기능 모듈과 계층 책임 수정 | 실제 구조 결함 해결 | 작성자 28검사·임시 DB/API 호환, 고정 코드 리뷰 추가 지적 없음 보고 |
+나머지 글도 근거 기록으로 남기지만 재작성한 글과 같은 품질로 안내하지 않는다. 우선 단문 요약과 주제 혼합을 풀고, 초기 시점의 미구현/미확정 문장은 당시 상태임을 명확히 해야 한다.
 
-| [LEARN-0010](entries/0010-prisma-client-and-sql.md) | Prisma Client 우선과 SQL 예외·타입 보장 | 쿼리 개선/예방 설계 | 자체33개·임시DB 회귀·고정 코드 리뷰 |
-| [LEARN-0011](entries/0011-reviewed-candidates-to-events.md) | 검토 공지에서 안정 이벤트로 수동 반영 | 제품 연결/예방 설계 | 초기47검사·로컬4건; DATA-47 유형거부/5건 추가 작성자 관측, 독립 통합 검증 전 |
+| 글 | 현재 보완할 점 |
+|---|---|
+| [0001 · 날짜와 공개 이벤트](entries/0001-time-and-release-events.md) | 예제·대안은 있으나 초기 미구현 시점과 후속 구현의 관계 정리 필요 |
+| [0002 · 판정과 증거](entries/0002-verdict-and-evidence.md) | 초기 bootstrap 설명을 현재 실행기와 구분하고 작은 판정 예제 보강 |
+| [0003 · 독립 리뷰의 반례](entries/0003-independent-review-found-engine-gaps.md) | 실제 반례·수정 설명을 최소 입력/출력으로 확장 |
+| [0004 · 세 저장소 경계](entries/0004-three-repository-boundaries.md) | 당시 미정 정책과 후속 확정이 혼재; 책임과 버전 조합 중심으로 재편집 |
+| [0005 · 날짜·관계·버전 계약](entries/0005-contract-time-integrity.md) | 세 주제를 분리하거나 연결 원리를 예제로 설명 |
+| [0007 · OTT 출처 근거](entries/0007-ott-source-evidence.md) | 조사 목록을 게시일/공개일 오인의 구체적인 예제로 연결 |
+| [0008 · 후보와 확정 게이트](entries/0008-ott-candidate-gates.md) | 날짜 정밀도별 입력·보류·게시 결과 예제와 대안 보강 |
+| [0009 · Nest 계층 책임](entries/0009-nest-layer-boundaries.md) | 계층 이름보다 변경 전후 요청 흐름·직접 IO의 비용 설명 필요 |
+| [0011 · 검토 후보와 이벤트 키](entries/0011-reviewed-candidates-to-events.md) | 후속 작업 append 다수; 안정 ID·분류 지원·원천 식별 주제 분리 필요 |
+| [0012 · 상세·비동기 응답](entries/0012-detail-and-request-revision.md) | 9줄 압축 요약; 화면의 버전 혼합·재시도 경합 예제 필요 |
+| [0013 · 증거 대상 묶기](entries/0013-evidence-subject-binding.md) | digest 정의와 혼합 증거 반례·대안 설명 필요 |
+| [0014 · 고정 소스와 실행 환경](entries/0014-snapshot-and-local-runner.md) | 폐기된 전용 계정 조사 경과와 재사용할 실행 원리를 분리 |
+| [0016 · API 기대값](entries/0016-independent-api-observations.md) | 검사 목록을 독립 기대값 도출 예제와 대안으로 풀기 |
+| [0017 · 비밀 검사와 UI 범위](entries/0017-secret-policy-and-ui-scope.md) | 비밀 스캐너·UI 관찰은 별도 주제; 대표 결함의 재현 원리 설명 필요 |
+| [0018 · API 주소 설정](entries/0018-shared-api-endpoint.md) | 실행 환경별 설정 해석 예제와 우선순위 선택 이유 보강 |
+| [0019 · DB 읽기 일관성](entries/0019-account-read-consistency.md) | 두 DB 연결의 교차 실행 순서와 격리 수준 대안 설명 필요 |
 
-## 가볍게 유지하는 방법
+## 기록을 남기는 방식
 
-- 기술 선택이나 비슷한 문제가 반복될 때 기록한다. 단순 오타 수정마다 새 글을 만들지 않는다.
-- 작업 카드에 `학습 기록: LEARN-ID` 또는 `없음: 이유`를 적는다.
-- 문제 해결 후 기록에는 가설/실험/관찰/결론을 구분하고, 실행하지 않은 결과를 만들지 않는다.
-- AI는 초안을 쓸 수 있다. 검토자는 근거와 주장 일치를 확인한다.
-  사용자만 자신의 이해도와 직접 설명한 내용을 기록한다. AI가 ‘사용자가 이해함’으로 표시하지 않는다.
-- 코드·기준·제공처 문서가 바뀌면 연결된 기록을 다시 확인하고 이전 결론은 이력으로 보존한다.
-- 블로그 초안은 실제 해결 근거가 있는 기록에서 만들고, 비밀·개인정보·내부 주소를 제거한다.
-  초안 작성과 외부 게시 승인은 별개다.
+[공통 작성 기준](../system/learning-policy.md)과 [학습 글 템플릿](templates/learning-entry.md)을 따른다. 글 하나에 기술 질문 하나를 두고, 문제·원리·작은 예제·대안·선택 이유·비용을 연결한다. 수정 시 주장이 달라지면 본문을 다시 편집하거나 글을 나눈다. 날짜별 실행 요약만 추가하는 방식은 중단한다.
 
-## 하나의 기록에서 세 가지로 활용
+기술 결정·명령·실행 결과의 원본은 해당 저장소의 ADR·작업 카드다. 독립 검증 결과는 verifier run/review가 소유한다. 이곳의 글은 구현 담당이 쓸 수 있는 해설이며, 독립 검증이나 사용자 이해를 대신 승인하지 않는다. 실제 장애·개발 중 재현·예방 설계도 구분한다.
 
-1. **학습:** 문제·원리·대안·반례를 읽고 ‘다른 조건이면 어떤 선택인가’를 직접 답한다.
-2. **면접:** 실제 본인 역할, AI가 수행한 일, 직접 판단한 이유, 검증 결과를 1~2분으로 설명한다.
-   운영하지 않은 기능을 운영 경험으로, 없는 수치를 성과로 바꾸지 않는다.
-3. **블로그:** 문제 제기 → 재현 → 원인 → 대안 비교 → 선택 → 검증 → 한계 순서로 편집한다.
-
-빈 기록은 [학습 템플릿](templates/learning-entry.md), 기술 결정은 [ADR 템플릿](https://github.com/joobang/godieor-app/blob/dev/docs/decisions/template.md),
-개발 작업은 [작업 카드](https://github.com/joobang/godieor-app/blob/dev/docs/ai/task-template.md)를 사용한다.
-현재는 Markdown과 Git으로 운영하며 검색 서비스·RAG·별도 카탈로그 앱은 만들지 않는다.
-
-- [LEARN-0012 상세 최신값과 요청 소유권](entries/0012-detail-and-request-revision.md) — 작성자 해설 초안, 정적 발견과 UI 점검 구분.
-
-- [LEARN-0013 증거 대상 조합 바인딩](entries/0013-evidence-subject-binding.md) — 검증기 개발자 해설 초안, 증거 진위와 입력 일관성 구분.
-
-- [LEARN-0014 고정 소스와 실제 실행의 경계](entries/0014-snapshot-and-local-runner.md) — 작성자 해설 초안, Git 실행 함정·부분 sandbox 확인·미해결 후손 수명 구분.
-
-- [LEARN-0015 제품 검증과 실행 환경의 범위](entries/0015-local-validation-scope.md) — 전용 계정 폐기, 로컬 빌드와 격리 검증 구분, 작성자 해설 초안.
-
-- [LEARN-0016 독립 기대값과 API 판정 연결](entries/0016-independent-api-observations.md) — 작성자 해설 초안, API component·필터 부분성공·제품통합 판정 구분.
-
-- [LEARN-0017 비밀 검사 정책과 UI 관찰 범위](entries/0017-secret-policy-and-ui-scope.md) — 작성자 해설 초안, 명시 literal 정책·오류 누락 방지·로컬 설정과 서버 왕복 구분.
-
-- [LEARN-0018 공개·계정 API 주소 일치](entries/0018-shared-api-endpoint.md) — 작성자 해설 초안, 정적불일치·번들주입검사·실기기미확인 구분.
-
-- [LEARN-0019 계정 읽기 일관성](entries/0019-account-read-consistency.md) — 두 연결 합성 재현, 작성자 관측/독립 승인 대기.
-
-- [LEARN-0020 계정 작업 소유권](entries/0020-account-operation-ownership.md) — 실제 앱 코드의 합성4실패→15/15, 작성자 관측/독립 검증 전.
-
-- [LEARN-0021 OTT 참조 항목 일치](entries/0021-streampick-parity.md) — 새 시즌 분모 누락 재현, 총수와 정확 일치 구분, 작성자 관측/목표 미완료.
+편집 전 5편의 관측과 수치는 [원문 보관 안내](archive/2026-11-17/README.md)에서 확인할 수 있다. 역사 기록이며 현재 정책의 지시로 사용하지 않는다. 통합 카탈로그는 이 저장소가 원본이고 app/backend에는 각 기술 결정의 원본을 남긴다.
