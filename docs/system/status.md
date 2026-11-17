@@ -1,3 +1,10 @@
+## DATA-77 · IGDB 공개 참조 읽기 전용 감사 도구 (2026-11-17)
+
+- backend 원본 `docs/tasks/DATA-77-igdb-public-references.md`, 요구 PROD-005/006/007/009·GD-005/006/007/009, ADR024/LEARN0006. DATA-76의 49건 큐를 입력으로 기존 event ID/source binding, 다른 공개 ID, 사용자 찜·날짜·지역을 읽기 전용 DB 스냅샷에서 확인하는 감사 CLI를 추가했다.
+- 합성 검사 16/16 통과, 실제 큐 49행 입력 검증 성공. 중복된 공개 ID의 찜을 요약에서 중복 합산하지 않는다. 실제 DB 접속·조회 및 새 IGDB 실시간 검사는 실행하지 않아 결과 49건의 현재 상태는 미확인이다. 기존 38 중복 가능/11 근거 부족은 계속 수동 보류한다.
+- 게시 검토는 실제 출시 상태 `event.status`와 분리하고 원본 공개 ID 및 찜 유지, 공식 원천·숫자지역 확인 뒤 수동 alias 검토가 필요하다는 정책 초안을 작성했다. DB·API·계약·migration·앱 코드·verifier acceptance/verdict·공개 게시 데이터 변경 없음. 독립 runner/리뷰, 실폰/클라우드·push 미실행.
+- app 기준 `34239dc`, backend 기준 `6485b0e`, verifier 기준 `6a93a14`. 다음은 DB 접근 가능한 환경에서 실참조/찜 영향 확인, 게시 표시·별칭 명세와 독립 검증 설계. 데이터 단계는 계속 진행 중이다. revision `SYNC-2026-11-17-DATA-77`.
+
 ## DATA-74 · 제공처 일일08:30 운영·실패 복구·IGDB 원천 추적 (2026-11-17)
 
 - backend 원본 `docs/tasks/DATA-74-provider-daily-source-audit.md`, 구현86cc91577a6dd556cded62b1487df57570dccca1, ADR024/LEARN0006. KOBIS/EPL/IGDB를 각각 별도 프로세스로 실행하는 runner와 macOS08:30 KST LaunchAgent를 등록했다. 기존 OTT09시 job은 별도 유지.
