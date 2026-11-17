@@ -589,5 +589,5 @@ backend `b637ecb`: 한국 공식 OTT 목록을 시작점으로 플랫폼/날짜/
 
 # DATA-81 · 전체 일정 2026-10-01 하한 (2026-11-17)
 
-- app 제품 정책과 backend 구현을 동일 기준으로 동기화. backend 자체 테스트340/340이나 verifier 독립 승인/runner 미실행. DB 기존 과거 데이터 유지; 참조 감사·용량 정리 후속. revision `SYNC-2026-11-17-DATA-81`.
+- 원본 제품 정책: app `docs/product.md`; 구현: backend `docs/tasks/DATA-81-october-game-cutoff.md`. backend 테스트340/340, DB 조작·독립 승인·push 없음. 원본 ID/찜/기존 역사적 리뷰 보존. 다음: 전 카테고리 10월 이후 실 DB 신규 수집·API 확인, 이전 데이터 참조 감사 후 용량 정리. revision `SYNC-2026-11-17-DATA-81`.
 

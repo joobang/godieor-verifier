@@ -597,6 +597,6 @@ backend `b637ecb`: 한국 공식 OTT 목록을 시작점으로 플랫폼/날짜/
 
 # DATA-81 · 전체 콘텐츠 2026-10-01 기준 적용 (2026-11-17)
 
-- 사용자 정정: 모든 콘텐츠(극장영화, OTT 영화/드라마/예능/애니/다큐, 게임 전체 기기, EPL)의 일정 기준 2026-10-01. 앱 원본 `docs/product.md`, backend 원본 `docs/tasks/DATA-81-october-game-cutoff.md`.
-- backend 자체 테스트340/340, DB 정리/신규 적재·독립 검증 runner 및 verdict 미실행. 기존 참조·찜 보존. revision `SYNC-2026-11-17-DATA-81`.
+- 사용자 정정: IGDB만이 아니라 KOBIS 극장영화·OTT 4사(드라마/영화/예능/애니/다큐)·게임 모든 기기·EPL에 2026-10-01 기준을 적용한다. 사용자 확정 원본 `docs/product.md`, backend 구현 원본 `docs/tasks/DATA-81-october-game-cutoff.md`.
+- backend 자체 전체 340/340 통과. 기존 OTT 2026년 4·6월 매핑의 참조·ID 보존, 실제 새 수집/DB 정리/배포/독립 검증 승인 없음. 날짜가 미정인 콘텐츠를 임의 배치하지 않는다. 공통 revision `SYNC-2026-11-17-DATA-81`.
 
