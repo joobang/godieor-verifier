@@ -595,3 +595,8 @@ backend `b637ecb`: 한국 공식 OTT 목록을 시작점으로 플랫폼/날짜/
 - backend 원본 `docs/tasks/DATA-76-igdb-review-queue.md`. DATA74 공식 원천 감사 49건을 공개 event ID/후보 release ID/다른 저장 event ID로 구분해 검토 큐로 추출. 중복 의심38·원천 근거 부족11이며 중복 확정이나 자동 교정 건수가 아니다.
 - 모든 항목은 수동 검토 대기. 공용 ID·찜·날짜·DB·앱 표시/계약·verifier 승인 불변. 기존 과거 원천 region NULL을 추정하지 않는다. 다음은 공식 증거와 참조를 검토한 뒤 내부 게시 검토와 event 상태·alias 정책을 분리 설계한다. 데이터 단계 진행 중.
 
+# DATA-81 · 전체 콘텐츠 2026-10-01 기준 적용 (2026-11-17)
+
+- 사용자 정정: 모든 콘텐츠(극장영화, OTT 영화/드라마/예능/애니/다큐, 게임 전체 기기, EPL)의 일정 기준 2026-10-01. 앱 원본 `docs/product.md`, backend 원본 `docs/tasks/DATA-81-october-game-cutoff.md`.
+- backend 자체 테스트340/340, DB 정리/신규 적재·독립 검증 runner 및 verdict 미실행. 기존 참조·찜 보존. revision `SYNC-2026-11-17-DATA-81`.
+
